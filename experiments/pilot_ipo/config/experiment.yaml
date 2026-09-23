@@ -1,0 +1,30 @@
+experiment:
+  name: pilot_ipo
+  purpose: "PeerProof end-to-end pretest"
+
+target:
+  company_name: null
+  corp_code: null
+  rcept_no: null
+  analysis_as_of: null
+
+peer_pool:
+  max_candidates: 10
+  top_k: 5
+
+embedding:
+  model: "BAAI/bge-m3"
+  similarity: "cosine"
+
+language_network:
+  keyword_method: "keybert"
+  keyword_similarity: "jaccard"
+  edge_similarity: "weighted_jaccard"
+  structural_similarity: "centrality_vector"
+
+fusion:
+  method: "late_fusion"
+  weights: null
+
+valuation:
+  method: "PER"

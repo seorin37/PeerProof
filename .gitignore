@@ -26,3 +26,7 @@ data/processed/*
 
 # OS
 .DS_Store
+
+# Pilot experiment raw/output data
+experiments/pilot_ipo/data/raw/
+experiments/pilot_ipo/outputs/
