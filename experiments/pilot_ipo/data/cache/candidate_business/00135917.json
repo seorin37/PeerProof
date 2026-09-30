@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00135917",
+    "stock_code": "000370",
+    "company_name": "한화손해보험",
+    "krx_company_name": "한화손해보험",
+    "market": "KOSPI",
+    "listing_date": "19750630",
+    "listed_shares": "116738915"
+  },
+  "filing": {
+    "rcept_no": "20231228000091",
+    "rcept_dt": "20231228",
+    "report_nm": "[기재정정]분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용\n1. 사업의 개요\n2. 영업의 현황\n3. 파생상품거래 현황\n4. 영업설비\n5. 재무건전성 등 기타 참고사항"
+}

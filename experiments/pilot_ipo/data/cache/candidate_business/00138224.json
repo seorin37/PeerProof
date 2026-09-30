@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00138224",
+    "stock_code": "003410",
+    "company_name": "쌍용씨앤이",
+    "krx_company_name": "쌍용C&E",
+    "market": "KOSPI",
+    "listing_date": "19750503",
+    "listed_shares": "498696968"
+  },
+  "filing": {
+    "rcept_no": "20231121000389",
+    "rcept_dt": "20231121",
+    "report_nm": "[기재정정]분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용 5. 위험관리 및 파생거래 가. 위험관리 (4) 자본위험관리\n아니오\n기재 정정\n[주1. 정정전]\n[주1. 정정후]"
+}

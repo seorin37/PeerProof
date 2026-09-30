@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00382199",
+    "stock_code": "055550",
+    "company_name": "신한지주",
+    "krx_company_name": "신한지주",
+    "market": "KOSPI",
+    "listing_date": "20010910",
+    "listed_shares": "512759471"
+  },
+  "filing": {
+    "rcept_no": "20231114001992",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "사업의 내용\nIII."
+}

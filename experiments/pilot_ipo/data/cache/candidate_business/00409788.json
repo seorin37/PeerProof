@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00409788",
+    "stock_code": "083650",
+    "company_name": "비에이치아이",
+    "krx_company_name": "비에이치아이",
+    "market": "KOSDAQ",
+    "listing_date": "20051202",
+    "listed_shares": "30944375"
+  },
+  "filing": {
+    "rcept_no": "20231114000634",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용"
+}

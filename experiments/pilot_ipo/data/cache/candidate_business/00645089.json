@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00645089",
+    "stock_code": "104200",
+    "company_name": "NHN벅스",
+    "krx_company_name": "NHN벅스",
+    "market": "KOSDAQ",
+    "listing_date": "20091006",
+    "listed_shares": "14827550"
+  },
+  "filing": {
+    "rcept_no": "20231114001639",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "Ⅱ. 사업의 내용\n1. 사업의 개요 2. 주요 제품 및 서비스 3. 원재료 및 생산설비 4. 매출 및 수주상황 5. 위험관리 및 파생거래 6. 주요계약 및 연구개발활동 7. 기타 참고사항"
+}

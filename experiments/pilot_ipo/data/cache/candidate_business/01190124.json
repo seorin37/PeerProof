@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "01190124",
+    "stock_code": "279600",
+    "company_name": "미디어젠",
+    "krx_company_name": "미디어젠",
+    "market": "KOSDAQ",
+    "listing_date": "20191105",
+    "listed_shares": "4684781"
+  },
+  "filing": {
+    "rcept_no": "20231128000270",
+    "rcept_dt": "20231128",
+    "report_nm": "[기재정정]반기보고서 (2023.06)"
+  },
+  "business_text": "II. 사업의 내용1. 사업의개요2. 주요 제품 및 서비스3. 원재료 및 생산설비4. 매출 및 수주상황5. 위험관리 및 파생거래6. 주요계약 및 연구개발활동7. 기타 참고사항"
+}

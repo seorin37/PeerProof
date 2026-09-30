@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "01336373",
+    "stock_code": "235980",
+    "company_name": "메드팩토",
+    "krx_company_name": "메드팩토",
+    "market": "KOSDAQ",
+    "listing_date": "20191219",
+    "listed_shares": "33580695"
+  },
+  "filing": {
+    "rcept_no": "20231103000324",
+    "rcept_dt": "20231103",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "사업의 내용3."
+}

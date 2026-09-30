@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00536329",
+    "stock_code": "106520",
+    "company_name": "노블엠앤비",
+    "krx_company_name": "노블엠앤비",
+    "market": "KOSDAQ",
+    "listing_date": "20120713",
+    "listed_shares": "38695952"
+  },
+  "filing": {
+    "rcept_no": "20231114000103",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "Ⅱ. 사업의 내용"
+}

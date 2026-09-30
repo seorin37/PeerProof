@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00256502",
+    "stock_code": "045660",
+    "company_name": "에이텍",
+    "krx_company_name": "에이텍",
+    "market": "KOSDAQ",
+    "listing_date": "20010524",
+    "listed_shares": "8260000"
+  },
+  "filing": {
+    "rcept_no": "20231114001531",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "사업의 내용 .............................................................................\n10\nⅢ."
+}

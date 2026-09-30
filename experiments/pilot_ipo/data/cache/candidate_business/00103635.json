@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00103635",
+    "stock_code": "014200",
+    "company_name": "광림",
+    "krx_company_name": "광림",
+    "market": "KOSDAQ",
+    "listing_date": "19930707",
+    "listed_shares": "90706696"
+  },
+  "filing": {
+    "rcept_no": "20231116000355",
+    "rcept_dt": "20231116",
+    "report_nm": "[기재정정]분기보고서 (2020.09)"
+  },
+  "business_text": "II. 사업의 내용\n-----------------------"
+}

@@ -30,3 +30,5 @@ data/processed/*
 # Pilot experiment raw/output data
 experiments/pilot_ipo/data/raw/
 experiments/pilot_ipo/outputs/
+experiments/pilot_ipo/data/processed/
+

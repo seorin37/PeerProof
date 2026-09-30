@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00258689",
+    "stock_code": "035900",
+    "company_name": "JYP Ent.",
+    "krx_company_name": "JYP Ent.",
+    "market": "KOSDAQ",
+    "listing_date": "20010830",
+    "listed_shares": "35532492"
+  },
+  "filing": {
+    "rcept_no": "20231110000443",
+    "rcept_dt": "20231110",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용\n1. 사업의 개요 2. 주요 제품 및 서비스 3. 원재료 및 생산설비 4. 매출 및 수주상황 5. 위험관리 및 파생거래 6. 주요계약 및 연구개발활동 7. 기타 참고사항"
+}

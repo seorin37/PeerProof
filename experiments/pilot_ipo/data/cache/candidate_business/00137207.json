@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00137207",
+    "stock_code": "011330",
+    "company_name": "유니켐",
+    "krx_company_name": "유니켐",
+    "market": "KOSPI",
+    "listing_date": "19891214",
+    "listed_shares": "96722403"
+  },
+  "filing": {
+    "rcept_no": "20231115000353",
+    "rcept_dt": "20231115",
+    "report_nm": "[기재정정]분기보고서 (2023.09)"
+  },
+  "business_text": "Ⅱ. 사업의 내용(제조업)"
+}

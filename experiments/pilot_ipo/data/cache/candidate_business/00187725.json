@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00187725",
+    "stock_code": "015710",
+    "company_name": "코콤",
+    "krx_company_name": "코콤",
+    "market": "KOSDAQ",
+    "listing_date": "19970930",
+    "listed_shares": "17530500"
+  },
+  "filing": {
+    "rcept_no": "20231114001072",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용---------------------------------------------------27"
+}

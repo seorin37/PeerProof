@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00155151",
+    "stock_code": "043370",
+    "company_name": "피에이치에이",
+    "krx_company_name": "피에이치에이",
+    "market": "KOSDAQ",
+    "listing_date": "20011213",
+    "listed_shares": "21000000"
+  },
+  "filing": {
+    "rcept_no": "20231114000472",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "Ⅱ. 사업의 내용"
+}

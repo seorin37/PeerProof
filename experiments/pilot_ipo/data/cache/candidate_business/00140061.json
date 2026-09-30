@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00140061",
+    "stock_code": "022220",
+    "company_name": "티케이지애강",
+    "krx_company_name": "TKG애강",
+    "market": "KOSDAQ",
+    "listing_date": "20060411",
+    "listed_shares": "51794579"
+  },
+  "filing": {
+    "rcept_no": "20231114001479",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "Ⅱ. 사업의 내용"
+}

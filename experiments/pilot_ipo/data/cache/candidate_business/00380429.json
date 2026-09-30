@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00380429",
+    "stock_code": "058820",
+    "company_name": "CMG제약",
+    "krx_company_name": "CMG제약",
+    "market": "KOSDAQ",
+    "listing_date": "20010831",
+    "listed_shares": "138892244"
+  },
+  "filing": {
+    "rcept_no": "20231113000290",
+    "rcept_dt": "20231113",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용.....................................................................................8"
+}

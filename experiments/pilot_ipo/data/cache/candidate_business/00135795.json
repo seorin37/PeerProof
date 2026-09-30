@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00135795",
+    "stock_code": "029530",
+    "company_name": "신도리코",
+    "krx_company_name": "신도리코",
+    "market": "KOSPI",
+    "listing_date": "19961224",
+    "listed_shares": "10080029"
+  },
+  "filing": {
+    "rcept_no": "20231114000157",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용"
+}

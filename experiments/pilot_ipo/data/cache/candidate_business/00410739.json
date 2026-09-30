@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00410739",
+    "stock_code": "057880",
+    "company_name": "푸른소나무",
+    "krx_company_name": "피에이치씨",
+    "market": "KOSDAQ",
+    "listing_date": "20031229",
+    "listed_shares": "118807375"
+  },
+  "filing": {
+    "rcept_no": "20240122000406",
+    "rcept_dt": "20240123",
+    "report_nm": "[기재정정]사업보고서 (2021.12)"
+  },
+  "business_text": "II. 사업의 내용\n1. 사업의 개요\n감사보고서재발행\n(정정전1)\n(정정후1)\n2. 주요 제품 및 서비스\n(정정전2)\n(정정후2)\n4. 매출 및 수주상황\n(정정전3)\n(정정후3)\n5. 위험관리 및 파생거래\n(정정전4)\n(정정후4)\n6. 주요계약 및 연구개발활동\n(정정전5)\n(정정후5)"
+}

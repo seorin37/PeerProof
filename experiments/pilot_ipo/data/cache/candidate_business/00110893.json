@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00110893",
+    "stock_code": "003540",
+    "company_name": "대신증권",
+    "krx_company_name": "대신증권",
+    "market": "KOSPI",
+    "listing_date": "19751001",
+    "listed_shares": "50773400"
+  },
+  "filing": {
+    "rcept_no": "20231114001397",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용\n1. 사업의 개요\n2. 영업의 현황\n3. 파생상품거래 현황\n4. 영업설비\n5. 재무건전성 등 기타 참고사항"
+}

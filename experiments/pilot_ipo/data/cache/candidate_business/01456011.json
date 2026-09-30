@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "01456011",
+    "stock_code": "376300",
+    "company_name": "디어유",
+    "krx_company_name": "디어유",
+    "market": "KOSDAQ",
+    "listing_date": "20211110",
+    "listed_shares": "23738406"
+  },
+  "filing": {
+    "rcept_no": "20240119000457",
+    "rcept_dt": "20240119",
+    "report_nm": "[기재정정]분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용 2. 주요 제품 및 서비스 4. 매출 및 수주상황 5. 위험관리 및 파생거래\n아니오\n계정 분류 오류에 따른 기재 정정\n주1) 정정 전\n주1) 정정 후"
+}

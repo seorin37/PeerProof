@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00112651",
+    "stock_code": "012800",
+    "company_name": "대창",
+    "krx_company_name": "대창",
+    "market": "KOSPI",
+    "listing_date": "19891205",
+    "listed_shares": "91140499"
+  },
+  "filing": {
+    "rcept_no": "20231113000281",
+    "rcept_dt": "20231113",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용\n-----------------------\n15"
+}

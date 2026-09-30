@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00404701",
+    "stock_code": "123890",
+    "company_name": "한국자산신탁",
+    "krx_company_name": "한국자산신탁",
+    "market": "KOSPI",
+    "listing_date": "20160713",
+    "listed_shares": "123977752"
+  },
+  "filing": {
+    "rcept_no": "20231114000354",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "사업의 내용\n(1) 사업의 개요(2) 영업의 현황(3) 파생상품거래 현황(4) 영업설비(5) 재무건전성 등 기타 참고사항\n3."
+}

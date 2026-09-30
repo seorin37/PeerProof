@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "01008762",
+    "stock_code": "194480",
+    "company_name": "데브시스터즈",
+    "krx_company_name": "데브시스터즈",
+    "market": "KOSDAQ",
+    "listing_date": "20141006",
+    "listed_shares": "11998380"
+  },
+  "filing": {
+    "rcept_no": "20231114002152",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "Ⅱ. 사업의 내용"
+}

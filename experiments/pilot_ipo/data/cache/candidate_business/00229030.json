@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00229030",
+    "stock_code": "354320",
+    "company_name": "알멕",
+    "krx_company_name": "알멕",
+    "market": "KOSDAQ",
+    "listing_date": "20230630",
+    "listed_shares": "6391381"
+  },
+  "filing": {
+    "rcept_no": "20231114002303",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용\n-----------------------"
+}

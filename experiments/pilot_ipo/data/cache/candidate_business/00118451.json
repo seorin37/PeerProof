@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00118451",
+    "stock_code": "002690",
+    "company_name": "동일제강",
+    "krx_company_name": "동일제강",
+    "market": "KOSPI",
+    "listing_date": "20150924",
+    "listed_shares": "20300360"
+  },
+  "filing": {
+    "rcept_no": "20231114001197",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "Ⅱ. 사업의 내용"
+}

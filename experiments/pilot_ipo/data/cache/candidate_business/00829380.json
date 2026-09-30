@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00829380",
+    "stock_code": "128660",
+    "company_name": "피제이메탈",
+    "krx_company_name": "피제이메탈",
+    "market": "KOSDAQ",
+    "listing_date": "20101213",
+    "listed_shares": "24803369"
+  },
+  "filing": {
+    "rcept_no": "20231117000129",
+    "rcept_dt": "20231117",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "사업의 내용 ..............................................................................................9"
+}

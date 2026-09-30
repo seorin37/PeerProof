@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "01335851",
+    "stock_code": "323990",
+    "company_name": "박셀바이오",
+    "krx_company_name": "박셀바이오",
+    "market": "KOSDAQ",
+    "listing_date": "20200922",
+    "listed_shares": "22993200"
+  },
+  "filing": {
+    "rcept_no": "20250828000123",
+    "rcept_dt": "20231113",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "사업의 내용 .............................................................................\n10\nⅢ."
+}

@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00170558",
+    "stock_code": "021240",
+    "company_name": "코웨이",
+    "krx_company_name": "코웨이",
+    "market": "KOSPI",
+    "listing_date": "20010807",
+    "listed_shares": "73799619"
+  },
+  "filing": {
+    "rcept_no": "20231114002294",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "사업의 내용\nIII."
+}

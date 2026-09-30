@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00120526",
+    "stock_code": "023530",
+    "company_name": "롯데쇼핑",
+    "krx_company_name": "롯데쇼핑",
+    "market": "KOSPI",
+    "listing_date": "20060209",
+    "listed_shares": "28288755"
+  },
+  "filing": {
+    "rcept_no": "20231201000373",
+    "rcept_dt": "20231201",
+    "report_nm": "[기재정정]분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용"
+}

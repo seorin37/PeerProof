@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "01762569",
+    "stock_code": "457190",
+    "company_name": "이수스페셜티케미컬",
+    "krx_company_name": "이수스페셜티케미컬",
+    "market": "KOSPI",
+    "listing_date": "20230531",
+    "listed_shares": "5598773"
+  },
+  "filing": {
+    "rcept_no": "20231114002962",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": "II. 사업의 내용"
+}

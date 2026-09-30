@@ -1,0 +1,18 @@
+{
+  "analysis_as_of": "20240213",
+  "company": {
+    "corp_code": "00923826",
+    "stock_code": "178780",
+    "company_name": "일월지엠엘",
+    "krx_company_name": "일월지엠엘",
+    "market": "KOSDAQ",
+    "listing_date": "20150630",
+    "listed_shares": "13964195"
+  },
+  "filing": {
+    "rcept_no": "20231114000365",
+    "rcept_dt": "20231114",
+    "report_nm": "분기보고서 (2023.09)"
+  },
+  "business_text": ""
+}
