@@ -67,8 +67,8 @@ nvidia-cusparselt-cu12==0.6.2
 nvidia-nccl-cu12==2.21.5
 nvidia-nvjitlink-cu12==12.4.127
 nvidia-nvtx-cu12==12.4.127
-packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1785888127/work
-pandas==3.0.6
+packaging 
+pandas==2.2.3
 parso==0.8.7
 peft==0.21.0
 pexpect==4.9.0
@@ -128,3 +128,4 @@ wcwidth==0.8.4
 websockets==16.1.1
 xxhash==4.0.1
 yarl==1.25.1
+beautifulsoup4
