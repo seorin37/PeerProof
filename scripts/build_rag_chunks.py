@@ -24,8 +24,8 @@ sys.path.insert(
 )
 
 
-from peerproof.profile import (
-    ProfileEvidenceExtractor,
+from peerproof.rag import (
+    ProfileRAGChunker,
 )
 
 
@@ -43,9 +43,6 @@ PROCESSED_ROOT = (
 def load_json(
     path: Path,
 ):
-
-    if not path.exists():
-        return {}
 
     with open(
         path,
@@ -83,44 +80,6 @@ def save_json(
 
 
 # ============================================================
-# 출력용
-# ============================================================
-
-def print_category_summary(
-    category: str,
-    data: dict,
-):
-
-    evidence = data.get(
-        "evidence",
-        [],
-    )
-
-    text_count = sum(
-        1
-        for item in evidence
-        if item[
-            "type"
-        ] == "text"
-    )
-
-    table_count = sum(
-        1
-        for item in evidence
-        if item[
-            "type"
-        ] == "table"
-    )
-
-    print(
-        f"{category:<10}"
-        f"총 {len(evidence):>3}개 "
-        f"(문단 {text_count}, "
-        f"표 {table_count})"
-    )
-
-
-# ============================================================
 # main
 # ============================================================
 
@@ -133,7 +92,7 @@ def main():
 
     print(
         "PEERPROOF / "
-        "BUSINESS PROFILE EVIDENCE BUILDER"
+        "RAG CHUNK BUILDER"
     )
 
     print(
@@ -144,75 +103,66 @@ def main():
         "\n기업명을 입력하세요: "
     ).strip()
 
-    if not company_name:
-
-        print(
-            "기업명을 입력해야 합니다."
-        )
-
-        return
-
     company_dir = (
         PROCESSED_ROOT
         / company_name
     )
 
-    if not company_dir.exists():
+    profile_dir = (
+        company_dir
+        / "profile"
+    )
+
+    evidence_path = (
+        profile_dir
+        / "profile_evidence.json"
+    )
+
+    if not evidence_path.exists():
 
         print()
         print(
-            "전처리 데이터가 없습니다."
+            "profile_evidence.json이 없습니다."
         )
 
         print(
-            company_dir
+            "먼저 실행하세요:"
+        )
+
+        print(
+            "python "
+            "scripts/build_business_profile.py"
         )
 
         return
 
     # --------------------------------------------------------
-    # metadata
-    # --------------------------------------------------------
-
-    metadata_path = (
-        company_dir
-        / "processed_metadata.json"
-    )
-
-    processed_metadata = (
-        load_json(
-            metadata_path
-        )
-    )
-
-    company_metadata = (
-        processed_metadata.get(
-            "company",
-            {}
-        )
-    )
-
-    # --------------------------------------------------------
-    # extractor
+    # Evidence 로드
     # --------------------------------------------------------
 
     print()
     print(
-        "[1/2] Business Profile "
-        "관련 근거 추출"
-    )
-
-    extractor = (
-        ProfileEvidenceExtractor(
-            company_dir
-        )
+        "[1/3] Profile Evidence 로드"
     )
 
     profile_evidence = (
-        extractor.build(
-            company_metadata=(
-                company_metadata
-            )
+        load_json(
+            evidence_path
+        )
+    )
+
+    # --------------------------------------------------------
+    # Chunk 생성
+    # --------------------------------------------------------
+
+    print(
+        "[2/3] RAG Chunk 생성"
+    )
+
+    rag_data = (
+        ProfileRAGChunker
+        .build_chunks(
+            profile_evidence
         )
     )
 
@@ -220,50 +170,100 @@ def main():
     # 저장
     # --------------------------------------------------------
 
-    profile_dir = (
+    rag_dir = (
         company_dir
-        / "profile"
+        / "rag"
     )
 
     output_path = (
-        profile_dir
-        / "profile_evidence.json"
+        rag_dir
+        / "rag_chunks.json"
     )
 
     save_json(
         output_path,
-        profile_evidence,
+        rag_data,
     )
 
     # --------------------------------------------------------
-    # 요약 출력
+    # 통계
     # --------------------------------------------------------
 
-    print()
-    print(
-        "[2/2] 추출 결과"
-    )
-
-    print()
-
-    categories = (
-        profile_evidence[
-            "categories"
+    stats = (
+        rag_data[
+            "statistics"
         ]
     )
 
-    for category in (
-        "business",
-        "growth",
-        "risk",
-        "finance",
-    ):
+    print()
+    print(
+        "[3/3] 생성 결과"
+    )
 
-        print_category_summary(
-            category,
-            categories[
-                category
-            ],
+    print()
+
+    print(
+        f"전체 chunk       : "
+        f"{stats['total_chunks']}"
+    )
+
+    print(
+        f"중복 제거        : "
+        f"{stats['duplicates_removed']}"
+    )
+
+    print()
+
+    print(
+        "Category:"
+    )
+
+    for (
+        category,
+        count,
+    ) in stats[
+        "by_category"
+    ].items():
+
+        print(
+            f"  {category:<12}"
+            f"{count:>4}"
+        )
+
+    print()
+
+    print(
+        "Source type:"
+    )
+
+    for (
+        source_type,
+        count,
+    ) in stats[
+        "by_source_type"
+    ].items():
+
+        print(
+            f"  {source_type:<12}"
+            f"{count:>4}"
+        )
+
+    print()
+
+    print(
+        "Report type:"
+    )
+
+    for (
+        report_type,
+        count,
+    ) in stats[
+        "by_report_type"
+    ].items():
+
+        print(
+            f"  {report_type:<12}"
+            f"{count:>4}"
         )
 
     print()
@@ -272,7 +272,7 @@ def main():
     )
 
     print(
-        "Business Profile 근거 추출 완료"
+        "RAG Chunk 생성 완료"
     )
 
     print(
@@ -280,6 +280,7 @@ def main():
     )
 
     print()
+
     print(
         "저장:"
     )
@@ -289,13 +290,14 @@ def main():
     )
 
     print()
+
     print(
         "다음 단계:"
     )
 
     print(
-        "profile_evidence.json "
-        "→ 실제 company_profile.json 구조화"
+        "rag_chunks.json "
+        "→ BGE-M3 embedding"
     )
 
 
