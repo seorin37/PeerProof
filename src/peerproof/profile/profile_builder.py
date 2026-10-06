@@ -1,136 +1,64 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
+
+from peerproof.profile.schema import (
+    PROFILE_SCHEMA,
+    get_profile_field_count,
+)
 
 from peerproof.profile.llm_client import (
     ProfileLLMClient,
 )
 
-from peerproof.rag.retriever import (
-    ProfileRetriever,
-)
 
-
-PROFILE_FIELDS = {
-
-    # ======================================================
-    # BUSINESS
-    # ======================================================
-
-    "business": {
-
-        "products_services": (
-            "이 기업의 주요 사업부문, "
-            "제품, 서비스 및 브랜드는 무엇인가?"
-        ),
-
-        "revenue_model": (
-            "이 기업은 어떤 제품이나 서비스를 "
-            "어떤 방식으로 판매하여 "
-            "매출을 발생시키는가?"
-        ),
-
-        "customer_type": (
-            "이 기업의 주요 고객 유형은 누구인가? "
-            "최종 소비자, 기업 고객, 해외 고객 등 "
-            "공시 근거를 바탕으로 설명하라."
-        ),
-
-        "distribution_channel": (
-            "이 기업의 주요 판매 및 "
-            "유통 채널은 무엇인가?"
-        ),
-
-        "business_structure": (
-            "이 기업의 주요 사업부문과 "
-            "사업 운영 구조는 "
-            "어떻게 구성되어 있는가?"
-        ),
-    },
-
-    # ======================================================
-    # GROWTH
-    # ======================================================
-
-    "growth": {
-
-        "revenue_growth": (
-            "이 기업의 매출 성장 추세와 "
-            "성장 특징은 무엇인가?"
-        ),
-
-        "global_expansion": (
-            "이 기업의 해외 진출 및 "
-            "글로벌 사업 확장 현황은 무엇인가?"
-        ),
-
-        "new_business": (
-            "이 기업이 추진하고 있는 "
-            "신규 사업, 신규 제품 또는 "
-            "사업영역 확장은 무엇인가?"
-        ),
-
-        "capacity_expansion": (
-            "이 기업의 생산능력 확대, "
-            "시설 투자 또는 생산 내재화 "
-            "현황은 무엇인가?"
-        ),
-    },
-
-    # ======================================================
-    # RISK
-    # ======================================================
-
-    "risk": {
-
-        "customer_concentration": (
-            "특정 고객, 거래처 또는 "
-            "판매채널에 대한 의존도가 "
-            "높은 위험이 있는가?"
-        ),
-
-        "competition_risk": (
-            "이 기업이 직면한 "
-            "주요 경쟁 위험은 무엇인가?"
-        ),
-
-        "regulatory_risk": (
-            "이 기업의 사업과 관련된 "
-            "주요 규제 또는 "
-            "법적 위험은 무엇인가?"
-        ),
-
-        "supply_chain_risk": (
-            "원재료, 외주생산, 공급업체 등과 "
-            "관련된 공급망 위험은 무엇인가?"
-        ),
-    },
-}
-
+# ============================================================
+# Company Profile Builder
+# ============================================================
 
 class CompanyProfileBuilder:
 
     def __init__(
         self,
-        retriever: ProfileRetriever,
+        retriever,
         llm_client: ProfileLLMClient,
-        top_k: int = 5,
+        query_top_k: int = 3,
+        evidence_limit: int = 8,
     ):
 
         self.retriever = retriever
         self.llm_client = llm_client
-        self.top_k = top_k
 
-    # ======================================================
-    # JSON 저장
-    # ======================================================
+        # query × category 하나당 검색 개수
+        self.query_top_k = query_top_k
+
+        # Gemini에 전달하는 최대 Evidence 개수
+        self.evidence_limit = evidence_limit
+
+    # ========================================================
+    # JSON
+    # ========================================================
 
     @staticmethod
-    def _save_json(
+    def load_json(
         path: Path,
-        data: dict[str, Any],
+    ) -> dict[str, Any]:
+
+        with open(
+            path,
+            "r",
+            encoding="utf-8",
+        ) as file:
+
+            return json.load(file)
+
+    @staticmethod
+    def save_json(
+        path: Path,
+        data: Any,
     ) -> None:
 
         path.parent.mkdir(
@@ -151,175 +79,563 @@ class CompanyProfileBuilder:
                 indent=2,
             )
 
-    # ======================================================
-    # 기존 Profile 로드
-    # ======================================================
+    # ========================================================
+    # Retriever
+    # ========================================================
 
-    @staticmethod
-    def _load_existing_profile(
-        path: Path,
-    ) -> dict[str, Any] | None:
+    def _search(
+        self,
+        query: str,
+        category: str,
+    ) -> list[dict[str, Any]]:
 
-        if not path.exists():
-            return None
-
-        try:
-
-            with open(
-                path,
-                "r",
-                encoding="utf-8",
-            ) as file:
-
-                return json.load(
-                    file
-                )
-
-        except Exception:
-
-            return None
-
-    # ======================================================
-    # 성공한 field인지 판단
-    # ======================================================
-
-    @staticmethod
-    def _is_completed_field(
-        field_data: Any,
-    ) -> bool:
-
-        if not isinstance(
-            field_data,
-            dict,
-        ):
-            return False
-
-        # 이전 실패 결과
-        if field_data.get(
-            "error"
-        ):
-            return False
-
-        # value key 자체가 있어야 함
-        if "value" not in field_data:
-            return False
-
-        value = field_data.get(
-            "value"
+        results = self.retriever.search(
+            query=query,
+            top_k=self.query_top_k,
+            category=category,
         )
 
-        # null도 "근거 없음"이라는
-        # 정상적인 LLM 판단일 수 있음
-        #
-        # reason + evidence_ids 구조가 있으면
-        # 정상 처리된 것으로 본다.
-        if (
-            "reason" in field_data
-            and "evidence_ids"
-            in field_data
-        ):
-            return True
+        if results is None:
+            return []
 
-        return (
-            value is not None
-        )
+        return list(results)
 
-    # ======================================================
-    # 초기 Profile
-    # ======================================================
+    # ========================================================
+    # Search result normalize
+    # ========================================================
 
     @staticmethod
-    def _create_empty_profile(
-        company_name: str,
+    def _normalize_search_result(
+        result: dict[str, Any],
+        query: str,
+        retrieval_category: str,
     ) -> dict[str, Any]:
 
+        # ----------------------------------------------------
+        # content
+        # ----------------------------------------------------
+
+        content = (
+            result.get("content")
+            or result.get("text")
+            or result.get("chunk")
+            or ""
+        )
+
+        # ----------------------------------------------------
+        # chunk id
+        # ----------------------------------------------------
+
+        chunk_id = (
+            result.get("chunk_id")
+            or result.get("id")
+        )
+
+        if not chunk_id:
+
+            normalized = " ".join(
+                str(content).split()
+            )
+
+            chunk_id = hashlib.sha1(
+                normalized.encode("utf-8")
+            ).hexdigest()[:16]
+
+        # ----------------------------------------------------
+        # score
+        # ----------------------------------------------------
+
+        score = result.get("score")
+
+        if score is None:
+            score = result.get("similarity")
+
+        if score is None:
+            score = 0.0
+
+        # ----------------------------------------------------
+        # metadata
+        # ----------------------------------------------------
+
+        metadata = (
+            result.get("metadata")
+            or {}
+        )
+
+        report = (
+            result.get("report")
+            or result.get("source")
+            or metadata.get("report")
+            or metadata.get("report_type")
+            or metadata.get("source")
+        )
+
+        section = (
+            result.get("section")
+            or metadata.get("section")
+            or metadata.get("heading")
+        )
+
+        page = (
+            result.get("page")
+            or metadata.get("page")
+            or metadata.get("page_number")
+        )
+
         return {
-            "company": company_name,
+            "chunk_id": str(chunk_id),
 
-            "profile_version": "0.2",
+            "content": str(content),
 
-            "generation_method": (
-                "DART + BGE-M3 RAG + LLM"
-            ),
+            "score": float(score),
 
-            "business": {},
+            "report": report,
 
-            "growth": {},
+            "section": section,
 
-            "risk": {},
+            "page": page,
 
-            "finance": {
-                "status": (
-                    "not_generated"
-                )
-            },
+            "metadata": metadata,
+
+            # 어떤 질문에서 검색됐는가
+            "matched_queries": [
+                query
+            ],
+
+            # 어떤 category에서 검색됐는가
+            "matched_categories": [
+                retrieval_category
+            ],
+
+            "query_hits": 1,
+
+            "category_hits": 1,
         }
 
-    # ======================================================
-    # Field 하나 생성
-    # ======================================================
+    # ========================================================
+    # Multiple Query + Multiple Category Retrieval
+    # ========================================================
+
+    def retrieve_field_evidence(
+        self,
+        category: str,
+        field_config: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+
+        queries = field_config.get(
+            "queries",
+            [],
+        )
+
+        # schema에 명시된 검색 category 사용
+        retrieval_categories = (
+            field_config.get(
+                "retrieval_categories"
+            )
+            or [category]
+        )
+
+        print(
+            "      검색 categories: "
+            + ", ".join(
+                retrieval_categories
+            )
+        )
+
+        merged: dict[
+            str,
+            dict[str, Any],
+        ] = {}
+
+        # ====================================================
+        # Query
+        # ====================================================
+
+        for query_index, query in enumerate(
+            queries,
+            start=1,
+        ):
+
+            print()
+            print(
+                f"      Query "
+                f"{query_index}/{len(queries)}"
+            )
+
+            print(
+                f"      → {query}"
+            )
+
+            # ================================================
+            # Category
+            # ================================================
+
+            for retrieval_category in (
+                retrieval_categories
+            ):
+
+                results = self._search(
+                    query=query,
+                    category=retrieval_category,
+                )
+
+                print(
+                    f"        "
+                    f"[{retrieval_category}] "
+                    f"retrieved: "
+                    f"{len(results)}"
+                )
+
+                # ============================================
+                # Search results
+                # ============================================
+
+                for result in results:
+
+                    item = (
+                        self._normalize_search_result(
+                            result=result,
+                            query=query,
+                            retrieval_category=(
+                                retrieval_category
+                            ),
+                        )
+                    )
+
+                    chunk_id = item[
+                        "chunk_id"
+                    ]
+
+                    # ========================================
+                    # 처음 등장한 chunk
+                    # ========================================
+
+                    if chunk_id not in merged:
+
+                        merged[
+                            chunk_id
+                        ] = item
+
+                        continue
+
+                    # ========================================
+                    # 이미 검색된 chunk
+                    # ========================================
+
+                    existing = merged[
+                        chunk_id
+                    ]
+
+                    # ----------------------------------------
+                    # Query
+                    # ----------------------------------------
+
+                    if query not in (
+                        existing[
+                            "matched_queries"
+                        ]
+                    ):
+
+                        existing[
+                            "matched_queries"
+                        ].append(
+                            query
+                        )
+
+                        existing[
+                            "query_hits"
+                        ] += 1
+
+                    # ----------------------------------------
+                    # Category
+                    # ----------------------------------------
+
+                    if retrieval_category not in (
+                        existing[
+                            "matched_categories"
+                        ]
+                    ):
+
+                        existing[
+                            "matched_categories"
+                        ].append(
+                            retrieval_category
+                        )
+
+                        existing[
+                            "category_hits"
+                        ] += 1
+
+                    # 동일 chunk가 여러 번 잡혔다면
+                    # 가장 높은 semantic score 유지
+                    existing[
+                        "score"
+                    ] = max(
+                        existing[
+                            "score"
+                        ],
+                        item[
+                            "score"
+                        ],
+                    )
+
+        # ====================================================
+        # Evidence ranking
+        # ====================================================
+
+        evidence_list = []
+
+        for item in merged.values():
+
+            # 여러 query에서 반복적으로 검색되면
+            # 조금 가산점
+            query_bonus = (
+                0.03
+                * max(
+                    item[
+                        "query_hits"
+                    ] - 1,
+                    0,
+                )
+            )
+
+            # 여러 category에서도 검색되었다면
+            # 관련성이 반복 확인된 것으로 보고
+            # 작은 가산점
+            category_bonus = (
+                0.01
+                * max(
+                    item[
+                        "category_hits"
+                    ] - 1,
+                    0,
+                )
+            )
+
+            item[
+                "fused_score"
+            ] = (
+                item["score"]
+                + query_bonus
+                + category_bonus
+            )
+
+            evidence_list.append(
+                item
+            )
+
+        # 높은 점수 순
+        evidence_list.sort(
+            key=lambda item: (
+                item[
+                    "fused_score"
+                ]
+            ),
+            reverse=True,
+        )
+
+        # Gemini 입력 제한
+        evidence_list = (
+            evidence_list[
+                : self.evidence_limit
+            ]
+        )
+
+        # ====================================================
+        # Evidence ID
+        # ====================================================
+
+        for index, item in enumerate(
+            evidence_list,
+            start=1,
+        ):
+
+            item[
+                "evidence_id"
+            ] = f"E{index}"
+
+        return evidence_list
+
+    # ========================================================
+    # LLM Evidence → 실제 Evidence 연결
+    # ========================================================
+
+    @staticmethod
+    def resolve_evidence(
+        evidences: list[dict[str, Any]],
+        selected_ids: list[str],
+    ) -> list[dict[str, Any]]:
+
+        evidence_map = {
+            evidence[
+                "evidence_id"
+            ]: evidence
+            for evidence in evidences
+        }
+
+        resolved = []
+
+        for evidence_id in (
+            selected_ids
+        ):
+
+            evidence = (
+                evidence_map.get(
+                    evidence_id
+                )
+            )
+
+            if not evidence:
+                continue
+
+            resolved.append(
+                {
+                    "evidence_id": (
+                        evidence_id
+                    ),
+
+                    "chunk_id": (
+                        evidence.get(
+                            "chunk_id"
+                        )
+                    ),
+
+                    "report": (
+                        evidence.get(
+                            "report"
+                        )
+                    ),
+
+                    "page": (
+                        evidence.get(
+                            "page"
+                        )
+                    ),
+
+                    "section": (
+                        evidence.get(
+                            "section"
+                        )
+                    ),
+
+                    "content": (
+                        evidence.get(
+                            "content"
+                        )
+                    ),
+
+                    "score": (
+                        evidence.get(
+                            "score"
+                        )
+                    ),
+
+                    "fused_score": (
+                        evidence.get(
+                            "fused_score"
+                        )
+                    ),
+
+                    "matched_queries": (
+                        evidence.get(
+                            "matched_queries"
+                        )
+                    ),
+
+                    "matched_categories": (
+                        evidence.get(
+                            "matched_categories"
+                        )
+                    ),
+                }
+            )
+
+        return resolved
+
+    # ========================================================
+    # 하나의 field 생성
+    # ========================================================
 
     def build_field(
         self,
-        company_name: str,
         category: str,
         field_name: str,
-        question: str,
+        field_config: dict[str, Any],
     ) -> dict[str, Any]:
 
-        # --------------------------------------------------
-        # RAG
-        # --------------------------------------------------
+        print()
 
-        evidence = (
-            self.retriever.search(
-                query=question,
-                top_k=self.top_k,
+        print(
+            f"    "
+            f"[{field_config.get('code')}] "
+            f"{field_config.get('label')}"
+        )
+
+        # ====================================================
+        # 1. Multiple-query / Multi-category RAG
+        # ====================================================
+
+        evidences = (
+            self.retrieve_field_evidence(
                 category=category,
+                field_config=field_config,
             )
         )
 
-        if not evidence:
+        print()
+        print(
+            f"      통합 evidence: "
+            f"{len(evidences)}"
+        )
 
-            return {
-                "question": question,
-
-                "value": None,
-
-                "evidence_ids": [],
-
-                "reason": (
-                    "관련 DART 근거를 "
-                    "검색하지 못했습니다."
-                ),
-
-                "retrieved_evidence": [],
-            }
-
-        # --------------------------------------------------
-        # LLM
-        # --------------------------------------------------
+        # ====================================================
+        # 2. Gemini
+        # ====================================================
 
         llm_result = (
             self.llm_client
-            .extract_field(
-                company_name=(
-                    company_name
-                ),
-                field_name=(
-                    field_name
-                ),
-                question=question,
-                evidence=evidence,
+            .generate_profile_field(
+                category=category,
+                field_name=field_name,
+                field_config=field_config,
+                evidences=evidences,
             )
         )
 
-        # --------------------------------------------------
-        # 저장 구조
-        # --------------------------------------------------
+        # ====================================================
+        # 3. Gemini가 선택한 Evidence 연결
+        # ====================================================
+
+        selected_ids = (
+            llm_result.get(
+                "evidence_ids"
+            )
+            or []
+        )
+
+        selected_evidence = (
+            self.resolve_evidence(
+                evidences=evidences,
+                selected_ids=selected_ids,
+            )
+        )
+
+        # ====================================================
+        # 4. 결과
+        # ====================================================
 
         return {
-            "question": question,
+            "code": (
+                field_config.get(
+                    "code"
+                )
+            ),
+
+            "label": (
+                field_config.get(
+                    "label"
+                )
+            ),
 
             "value": (
                 llm_result.get(
@@ -327,10 +643,21 @@ class CompanyProfileBuilder:
                 )
             ),
 
-            "evidence_ids": (
+            "status": (
                 llm_result.get(
-                    "evidence_ids",
-                    [],
+                    "status"
+                )
+            ),
+
+            "company_claim": (
+                llm_result.get(
+                    "company_claim"
+                )
+            ),
+
+            "interpretation": (
+                llm_result.get(
+                    "interpretation"
                 )
             ),
 
@@ -340,357 +667,331 @@ class CompanyProfileBuilder:
                 )
             ),
 
-            "retrieved_evidence": [
-                {
-                    "chunk_id": (
-                        item[
-                            "chunk_id"
-                        ]
-                    ),
+            "retrieval_categories": (
+                field_config.get(
+                    "retrieval_categories",
+                    [category],
+                )
+            ),
 
-                    "score": float(
-                        item[
-                            "score"
-                        ]
-                    ),
+            "queries": (
+                field_config.get(
+                    "queries",
+                    []
+                )
+            ),
 
-                    "report_type": (
-                        item[
-                            "report_type"
-                        ]
-                    ),
+            "rules": (
+                field_config.get(
+                    "rules",
+                    []
+                )
+            ),
 
-                    "source_type": (
-                        item[
-                            "source_type"
-                        ]
-                    ),
-                }
-                for item
-                in evidence
-            ],
+            # Gemini가 최종 선택한 Evidence
+            "evidence": (
+                selected_evidence
+            ),
+
+            # 검색된 전체 Evidence
+            # 디버깅용으로 반드시 남긴다.
+            "retrieved_evidence": (
+                evidences
+            ),
         }
 
-    # ======================================================
+    # ========================================================
+    # 완료 여부
+    # ========================================================
+
+    @staticmethod
+    def _is_completed_field(
+        value: Any,
+    ) -> bool:
+
+        if not isinstance(
+            value,
+            dict,
+        ):
+            return False
+
+        status = value.get(
+            "status"
+        )
+
+        return status in {
+            "확인",
+            "부분확인",
+            "미공시",
+            "해당없음",
+        }
+
+    # ========================================================
     # 전체 Profile 생성
-    # ======================================================
+    # ========================================================
 
     def build_profile(
         self,
         company_name: str,
         output_path: Path,
         resume: bool = True,
+        target_categories: list[str] | None = None,
     ) -> dict[str, Any]:
 
-        # --------------------------------------------------
-        # 기존 파일이 있으면 이어서 진행
-        # --------------------------------------------------
+        # ====================================================
+        # 기존 파일 로드
+        # ====================================================
 
-        existing = None
+        if (
+            resume
+            and output_path.exists()
+        ):
 
-        if resume:
-
-            existing = (
-                self._load_existing_profile(
+            profile = (
+                self.load_json(
                     output_path
                 )
             )
 
-        if existing:
-
-            profile = existing
-
             print()
             print(
-                "기존 company_profile.json "
-                "발견"
-            )
-
-            print(
-                "성공한 필드는 건너뛰고 "
-                "실패한 필드부터 재개합니다."
+                "기존 v2 Profile 발견 "
+                "→ 이어서 실행"
             )
 
         else:
 
-            profile = (
-                self._create_empty_profile(
+            profile = {
+                "version": "2.0",
+
+                "company": (
                     company_name
-                )
-            )
+                ),
 
-        # 구조 안전장치
-        profile[
-            "company"
-        ] = company_name
+                "profile": {
+                    "business": {},
+                    "growth": {},
+                    "risk": {},
+                },
 
-        profile[
-            "profile_version"
-        ] = "0.2"
+                "finance": {
+                    "status": (
+                        "separate_pipeline"
+                    ),
 
-        profile[
-            "generation_method"
-        ] = (
-            "DART + BGE-M3 RAG + LLM"
+                    "description": (
+                        "Finance는 LLM이 아니라 "
+                        "DART 재무 API와 "
+                        "Python 계산으로 처리한다."
+                    ),
+                },
+            }
+
+        total_fields = (
+            get_profile_field_count()
         )
-
-        profile.setdefault(
-            "business",
-            {},
-        )
-
-        profile.setdefault(
-            "growth",
-            {},
-        )
-
-        profile.setdefault(
-            "risk",
-            {},
-        )
-
-        profile.setdefault(
-            "finance",
-            {
-                "status": (
-                    "not_generated"
-                )
-            },
-        )
-
-        # --------------------------------------------------
-        # 전체 field 개수
-        # --------------------------------------------------
-
-        total_fields = sum(
-            len(fields)
-            for fields
-            in PROFILE_FIELDS.values()
-        )
-
-        current = 0
 
         success_count = 0
-        skipped_count = 0
-        failed_count = 0
+        skip_count = 0
+        fail_count = 0
 
-        # --------------------------------------------------
-        # category 반복
-        # --------------------------------------------------
+        selected_field_count = 0
 
-        for (
-            category,
-            fields,
-        ) in PROFILE_FIELDS.items():
+        # ====================================================
+        # Category
+        # ====================================================
 
-            for (
-                field_name,
-                question,
-            ) in fields.items():
+        for category, fields in (
+            PROFILE_SCHEMA.items()
+        ):
 
-                current += 1
+            # 선택된 category만 실행
+            if (
+                target_categories is not None
+                and category
+                not in target_categories
+            ):
+                continue
+
+            print()
+            print(
+                "=" * 70
+            )
+
+            print(
+                category.upper()
+            )
+
+            print(
+                "=" * 70
+            )
+
+            profile[
+                "profile"
+            ].setdefault(
+                category,
+                {},
+            )
+
+            # =================================================
+            # Field
+            # =================================================
+
+            for field_name, field_config in (
+                fields.items()
+            ):
+
+                selected_field_count += 1
 
                 print()
                 print(
-                    "=" * 70
-                )
-
-                print(
-                    f"[{current}/"
+                    f"[{selected_field_count}/"
                     f"{total_fields}] "
                     f"{category}."
                     f"{field_name}"
                 )
 
-                print(
-                    "=" * 70
-                )
-
-                # ------------------------------------------
-                # 기존 성공 결과 확인
-                # ------------------------------------------
-
-                existing_field = (
-                    profile
-                    .get(
-                        category,
-                        {},
-                    )
-                    .get(
+                existing = (
+                    profile[
+                        "profile"
+                    ][
+                        category
+                    ].get(
                         field_name
                     )
                 )
 
+                # =============================================
+                # Resume
+                # =============================================
+
                 if (
                     resume
                     and self._is_completed_field(
-                        existing_field
+                        existing
                     )
                 ):
 
-                    skipped_count += 1
-
                     print(
-                        "이미 정상 생성된 "
-                        "필드입니다."
+                        "    SKIP "
+                        "(이미 완료)"
                     )
 
-                    print(
-                        "→ SKIP"
-                    )
-
-                    print(
-                        "value: "
-                        f"{existing_field.get('value')}"
-                    )
+                    skip_count += 1
 
                     continue
-
-                print(
-                    f"질문: {question}"
-                )
-
-                # ------------------------------------------
-                # 생성
-                # ------------------------------------------
 
                 try:
 
                     result = (
                         self.build_field(
-                            company_name=(
-                                company_name
-                            ),
-                            category=(
-                                category
-                            ),
-                            field_name=(
-                                field_name
-                            ),
-                            question=(
-                                question
-                            ),
+                            category=category,
+                            field_name=field_name,
+                            field_config=field_config,
                         )
                     )
 
                     profile[
+                        "profile"
+                    ][
                         category
-                    ][field_name] = result
+                    ][
+                        field_name
+                    ] = result
 
                     success_count += 1
 
-                    print()
                     print(
-                        "완료"
+                        f"    → "
+                        f"{result['status']}"
                     )
 
-                    print(
-                        "value: "
-                        f"{result['value']}"
-                    )
-
-                    if (
-                        result[
-                            "evidence_ids"
-                        ]
+                    if result.get(
+                        "value"
                     ):
 
                         print(
-                            "evidence:"
+                            f"    → "
+                            f"{result['value']}"
                         )
-
-                        for evidence_id in (
-                            result[
-                                "evidence_ids"
-                            ]
-                        ):
-
-                            print(
-                                f"  - "
-                                f"{evidence_id}"
-                            )
 
                 except Exception as error:
 
-                    failed_count += 1
+                    fail_count += 1
 
-                    print()
                     print(
-                        f"ERROR: {error}"
+                        f"    [FAILED] "
+                        f"{type(error).__name__}: "
+                        f"{error}"
                     )
 
                     profile[
+                        "profile"
+                    ][
                         category
-                    ][field_name] = {
-                        "question": question,
+                    ][
+                        field_name
+                    ] = {
+                        "code": (
+                            field_config.get(
+                                "code"
+                            )
+                        ),
+
+                        "label": (
+                            field_config.get(
+                                "label"
+                            )
+                        ),
+
+                        "status": (
+                            "error"
+                        ),
 
                         "value": None,
-
-                        "evidence_ids": [],
-
-                        "reason": None,
-
-                        "retrieved_evidence": [],
 
                         "error": str(
                             error
                         ),
                     }
 
-                # ------------------------------------------
-                # 핵심:
-                # field 하나 끝날 때마다 저장
-                # ------------------------------------------
-
-                self._save_json(
+                # 필드 하나 끝날 때마다 저장
+                self.save_json(
                     output_path,
                     profile,
                 )
 
-                print(
-                    "중간 저장 완료"
-                )
+        # ====================================================
+        # Summary
+        # ====================================================
 
-        # --------------------------------------------------
-        # 최종 저장
-        # --------------------------------------------------
+        profile[
+            "summary"
+        ] = {
+            "total_fields": (
+                total_fields
+            ),
 
-        self._save_json(
+            "selected_fields": (
+                selected_field_count
+            ),
+
+            "success": (
+                success_count
+            ),
+
+            "skipped": (
+                skip_count
+            ),
+
+            "failed": (
+                fail_count
+            ),
+        }
+
+        self.save_json(
             output_path,
             profile,
-        )
-
-        print()
-        print(
-            "=" * 70
-        )
-
-        print(
-            "PROFILE BUILD SUMMARY"
-        )
-
-        print(
-            "=" * 70
-        )
-
-        print(
-            f"신규 성공 : "
-            f"{success_count}"
-        )
-
-        print(
-            f"기존 SKIP : "
-            f"{skipped_count}"
-        )
-
-        print(
-            f"실패      : "
-            f"{failed_count}"
-        )
-
-        print(
-            f"전체      : "
-            f"{total_fields}"
         )
 
         return profile
