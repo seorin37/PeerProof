@@ -1,81 +1,81 @@
-import { ChangeEvent, useRef, useState } from "react";
-import type { Company, Settings } from "../lib/types";
-import { Footer, Page } from "../components/Layout";
+import { useEffect, useMemo, useState } from "react";
+import { api, API_MODE } from "../api";
+import AsyncBoundary from "../components/AsyncBoundary";
+import { PageHead } from "../components/Layout";
+import { useResource } from "../hooks/useResource";
+import type { CompanySummary } from "../types/domain";
 
-interface Props {
-  settings: Settings;
-  companies: Company[];
-  fileName: string;
-  fileError: string | null;
-  industry: string;
-  setIndustry: (i: string) => void;
-  company: boolean;
-  setCompany: (v: boolean) => void;
-  onFile: (f: File) => void;
-  onNext: () => void;
-}
+interface Props { selected: CompanySummary | null; onSelect: (c: CompanySummary) => void; onNext: () => void }
 
-export default function Step1({ settings: s, companies, fileName, fileError, industry, setIndustry, company, setCompany, onFile, onNext }: Props) {
-  const [q, setQ] = useState("");
-  const fileRef = useRef<HTMLInputElement>(null);
-  const industries = Array.from(new Set(companies.map((c) => c.industry)));
-  const matches = s.industry === industry && (q.trim() === "" || (s.targetName + s.industry).includes(q.trim()));
-  const basis = [
-    ["평가기준일", s.asOf], ["이익 비교기간", s.period], ["통화", s.currency], ["재무제표 기준", s.fsBasis === "CFS" ? "CFS 연결" : s.fsBasis === "OFS" ? "OFS 별도" : s.fsBasis],
-  ];
-  const pick = (e: ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (f) onFile(f);
-    e.target.value = "";
-  };
+const SECTOR_ORDER = ["반도체·전자", "소프트웨어·IT", "바이오·헬스케어", "에너지·소재"];
+const pad = (n: number) => String(n).padStart(2, "0");
+
+export default function Step1({ selected, onSelect, onNext }: Props) {
+  const [query, setQuery] = useState("");
+  const [debounced, setDebounced] = useState("");
+  const [sector, setSector] = useState<string | null>(null);
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(query.trim()), 250);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  // 산업 칩은 전체 목록(검색어 없음)에서 만듭니다. 백엔드가 sector를 주지 않으면 이 영역은 숨겨집니다.
+  const all = useResource<CompanySummary[]>("companies:", (s) => api.searchCompanies("", s), (d) => d.length === 0);
+  const sectors = useMemo(() => {
+    const found = Array.from(new Set((all.data ?? []).map((c) => c.sector).filter((x): x is string => !!x)));
+    return [...SECTOR_ORDER.filter((s) => found.includes(s)), ...found.filter((s) => !SECTOR_ORDER.includes(s))];
+  }, [all.data]);
+
+  const res = useResource<CompanySummary[]>(`companies:${debounced}`, (s) => api.searchCompanies(debounced, s), (d) => d.length === 0);
+  const filtered = (res.data ?? []).filter((c) => !sector || c.sector === sector);
 
   return (
-    <Page step={1} mode={s.mode} eyebrow="TARGET COMPANY" title="비교의 시작, 대상기업 선택" sub="산업을 선택하고 분석할 IPO 기업을 지정하세요.">
+    <>
+      <PageHead step={0} eyebrow="TARGET COMPANY" title="비교의 시작, 대상기업 선택" sub="산업을 선택하고 분석할 IPO 기업을 지정하세요." />
       <section className="card pad">
-        <div className="card-head"><h2>01 &nbsp;산업 선택</h2><span className="muted">한국 시장</span></div>
-        <div className="grid2">
-          {industries.map((name, i) => (
-            <button key={name} className={`choice ${industry === name ? "on" : ""}`} onClick={() => { setIndustry(name); setCompany(false); }}>
-              <span className="mono">{String(i + 1).padStart(2, "0")}</span>{name}
-              {industry === name && <span className="tick">✓</span>}
-            </button>
-          ))}
-        </div>
-
-        <hr className="rule" />
-        <div className="card-head"><h2>02 &nbsp;IPO 후보기업</h2><span className="muted">데이터 연결 전</span></div>
-        <label className="input search">
-          <span className="ico">⌕</span>
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="기업명 또는 산업 검색" />
-        </label>
-        <div className="row-between small muted"><span>실제 IPO 후보 0개</span><span>체험용 프로필 {matches ? 1 : 0}개</span></div>
-        {matches ? (
-          <button className={`choice wide ${company ? "on" : ""}`} onClick={() => setCompany(!company)} aria-pressed={company}>
-            <span className="mono">01</span><b>{s.targetName}</b><span className="sep">·</span><span>{s.industry}</span>
-            <span className="gap" /><span className="mono">{s.targetId}</span><span>{s.mode === "예시" ? "체험용" : "확정"}</span>
-            {company && <span className="tick">✓</span>}
-          </button>
-        ) : (
-          <div className="empty">조건에 맞는 체험용 프로필이 없습니다. 「{s.industry}」 산업을 선택해 보세요.</div>
+        {sectors.length > 0 && (
+          <>
+            <div className="row-between"><h2>01 &nbsp;산업 선택</h2><small>한국 시장</small></div>
+            <div className="grid2" style={{ marginTop: 16 }}>
+              {sectors.map((s, i) => (
+                <button key={s} className={`choice ${sector === s ? "on" : ""}`} aria-pressed={sector === s} onClick={() => setSector(sector === s ? null : s)}>
+                  <span className="mono">{pad(i + 1)}</span><span>{s}</span>{sector === s && <span className="tick">✓</span>}
+                </button>
+              ))}
+            </div>
+            <hr className="rule" />
+          </>
         )}
-        <p className="note">실제 기업 목록은 아직 등록되지 않았습니다.<br />체험용 프로필을 선택하면 전체 평가 흐름을 확인할 수 있습니다.</p>
-
-        <hr className="rule" />
-        <div className="card-head"><h2>03 &nbsp;분석 기준 · 데이터</h2><span className="muted">대상·분석 범위 고정</span></div>
-        <div className="basis">
-          {basis.map(([k, v]) => (<div key={k}><small>{k}</small><b className="mono">{v}</b></div>))}
+        <div className="row-between">
+          <h2>{sectors.length > 0 ? "02 " : ""}&nbsp;IPO 후보기업</h2>
+          <small>{API_MODE === "live" ? "백엔드 연결됨" : "데이터 연결 전 · MOCK"}</small>
         </div>
-        <div className="source">
-          <div><small>데이터 파일</small><b className="mono">{fileName}</b><span className="badge">{s.mode} 모드</span></div>
-          <input ref={fileRef} type="file" accept=".xlsx" hidden onChange={pick} />
-          <button className="btn slim" onClick={() => fileRef.current?.click()}>엑셀 불러오기</button>
-        </div>
-        {fileError && <div className="warn">{fileError}</div>}
-        <p className="note">01_입력설정 · 05_기업입력 · 06_프로필근거 시트를 읽어 화면을 구성합니다. 유사도 점수와 PER 밴드는 이 화면에서 엑셀과 같은 수식으로 계산합니다.</p>
+        <label className="input search" style={{ marginTop: 16 }}>
+          <span className="ico" aria-hidden>⌕</span>
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="기업명 또는 산업 검색" aria-label="기업 검색" />
+        </label>
+        <div className="row-between"><small>{res.status === "success" ? `후보 ${filtered.length}개` : ""}</small><small>{API_MODE === "mock" ? "체험용 프로필" : ""}</small></div>
+        <AsyncBoundary res={res} rows={4} label="기업 목록" emptyText={debounced ? `‘${debounced}’에 해당하는 기업이 없습니다.` : "표시할 기업이 없습니다."}>
+          {() => filtered.length === 0 ? <div className="empty">이 산업에 해당하는 후보기업이 없습니다.</div> : (
+            <div role="listbox" aria-label="IPO 후보기업">
+              {filtered.map((c, i) => (
+                <button key={c.id} role="option" aria-selected={selected?.id === c.id}
+                  className={`choice wide ${selected?.id === c.id ? "on" : ""}`} onClick={() => onSelect(c)}>
+                  <span className="mono">{pad(i + 1)}</span>
+                  <b>{c.name}</b>
+                  <span className="muted small">· {[c.industry, c.market].filter(Boolean).join(" · ")}</span>
+                  {selected?.id === c.id && <span className="tick">✓</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </AsyncBoundary>
+        <p className="note">후보 목록은 {API_MODE === "mock" ? "예시(가상) 기업입니다. 체험용 프로필을 선택하면 전체 평가 흐름을 확인할 수 있습니다." : "백엔드에서 불러온 IPO 후보입니다."}</p>
       </section>
-      <Footer hint="선택한 기업의 산업 1차 필터와 비즈니스 프로필 분석을 실행합니다.">
-        <button className="btn primary" disabled={!company} onClick={onNext}>대상기업 분석</button>
-      </Footer>
-    </Page>
+      <div className="actions">
+        <span className="hint">{selected ? `선택: ${selected.name}` : "선택한 기업의 비즈니스 프로필을 분석합니다."}</span>
+        <div className="btns"><button className="btn primary" disabled={!selected} onClick={onNext}>대상기업 분석</button></div>
+      </div>
+    </>
   );
 }

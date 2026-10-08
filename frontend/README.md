@@ -1,29 +1,32 @@
-# Peer Proof — IPO 상대가치평가 (프론트엔드)
+# Peer Proof Frontend
 
-React 18 + TypeScript + Vite. 엑셀(`RAG 비교기업 선정과 IPO PER 평가`)의 8단계 설계와 수식을 그대로 구현했습니다.
+IPO 대상기업 공시 → Business Profile → Late Fusion(BGE-M3 임베딩 + 언어네트워크) Top 5 유사기업 → RAG+LLM 비교 설명 → PER 비교.
+React 18 + TypeScript + Vite. 백엔드(FastAPI)가 완성되기 전에는 **Mock JSON**으로 동작합니다.
 
-    npm install
-    npm run dev       # 개발 서버 (기본 데이터: public/sample.xlsx)
-    npm test          # 엔진이 엑셀 값과 일치하는지 검증 (vitest)
-    npm run build
+## 실행
+```bash
+npm install
+npm run dev        # http://localhost:5173 (기본: mock 모드)
+npm test           # vitest
+npm run build
+```
 
-## 8단계 → 화면
-| 엑셀 | 화면 |
-|---|---|
-| 01 산업·기업 선택 | 1. 대상기업 선택 (분석 기준·데이터 파일 포함) |
-| 02 산업 1차 필터 · 03 프로필 작성 | 로딩 화면 → 2. 프로필 표 (근거 보기·수정) |
-| 04 가중치 설정 | 2. 가중치 (합계 100% 필수, 예상 순위 변화) |
-| 05 BM 2차 필터 · 06 점수·순위 · 07 PER 선택 | 3. 필터 깔때기, 순위표, 선택 불가 사유 |
-| 08 공모가 밴드 | 4. Q1–Q3 PER → EPS → 할인 → 100원 절사, 공모금액 |
+## Mock / Live 전환
+`.env.example` 을 `.env.local` 로 복사해 사용합니다.
+- `VITE_API_MODE=mock` (기본) / `live`
+- `VITE_API_BASE_URL=/api`, `VITE_PROXY_TARGET=http://localhost:8000` (dev 프록시)
 
-## 구조
-- `src/lib/workbook.ts` — 엑셀 01·05·06 시트 파서 (`parseWorkbook`). API 연동 시 이 함수 대신 같은 모양(`ParsedData`)의 JSON을 `App.tsx`의 `apply()`에 넣으면 됩니다.
-- `src/lib/engine.ts` — 02·03 시트 수식 (필터, 점수, 순위, PER 사분위수, 공모가). 순수 함수.
-- `src/lib/engine.test.ts` — 엑셀 저장값(공모가 14,300–19,900 등)과 대조.
-- `src/steps/Step1~4.tsx`, `src/components/` — 화면.
+Mock 상태 시험: 주소 뒤에 `?mock=error` · `?mock=empty` · `?mock=slow`
+특정 자원만: `?mock=error:similar,network` (자원: companies, profile, similar, network, explanation, valuation)
 
-## 알아둘 점
-- 코사인 값(산업·BM·리스크)은 엑셀처럼 외부 RAG/벡터 검색 결과를 입력받습니다. 프론트는 임베딩을 계산하지 않습니다.
-- 로딩 화면은 시뮬레이션입니다. 실제 파이프라인 연결 시 진행률로 교체하세요.
-- 프로필 "수정"은 화면 기록용입니다. 점수 재계산은 외부 RAG 재실행이 필요합니다.
-- 최소 비교기업 수(3), PER 상한(60배)은 엑셀에서 "운영 정책 확정 필요"로 표시된 값입니다.
+## 구조 — 백엔드가 바뀔 때 고칠 곳
+API 경로·JSON 필드는 **확정되지 않았다고 가정**합니다.
+- `src/types/domain.ts` : 화면용 도메인 타입(점수 0–100). 백엔드 DTO와 독립.
+- `src/api/routes.ts` : 엔드포인트 경로 (PROVISIONAL). **경로 변경 시 여기만 수정.**
+- `src/api/adapters.ts` : 백엔드 JSON → 도메인 변환 (가정: snake_case). **필드 변경 시 여기만 수정.**
+- `src/api/mock.ts`, `src/mocks/*.json` : 가상 예시 데이터
+- `src/hooks/useResource.ts`, `components/AsyncBoundary.tsx` : 로딩/오류/데이터 없음 처리
+- `src/components/*`, `src/steps/*` : 화면 (API 형식을 직접 알지 못함)
+
+## 참고
+이전 Excel 기반 구현은 `feature/frontend` 의 이전 커밋에 남아 있습니다. 모든 Mock 값은 가상 예시입니다.

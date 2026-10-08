@@ -1,141 +1,78 @@
 import { useState } from "react";
-import { AREAS, AREA_KEYS } from "../lib/areas";
-import { keyLabel, profileValue } from "../lib/format";
-import { RankRow, rankedOnly } from "../lib/engine";
-import type { AreaKey, ProfileRow, Settings, Weights } from "../lib/types";
-import { Footer, Page } from "../components/Layout";
+import { api } from "../api";
+import { ErrorBox } from "../components/AsyncBoundary";
+import { describeError } from "../api/errors";
+import Loading from "../components/Loading";
+import { PageHead } from "../components/Layout";
+import { useResource } from "../hooks/useResource";
+import type { BusinessProfile, CompanySummary } from "../types/domain";
 
-interface Props {
-  settings: Settings;
-  profile: ProfileRow[];
-  overrides: Record<string, string>;
-  setOverride: (key: string, v: string) => void;
-  pct: Weights;
-  setPct: (w: Weights) => void;
-  current: RankRow[];
-  baseline: RankRow[];
-  onPrev: () => void;
-  onNext: () => void;
-}
+interface Props { company: CompanySummary; onBack: () => void; onNext: () => void }
 
-const TABS = [
-  { label: "Business Model", area: "비즈니스" },
-  { label: "Growth", area: "성장성" },
-  { label: "Risk", area: "리스크" },
-  { label: "Finance", area: "재무" },
-  { label: "Evidence", area: "근거" },
-];
-
-export default function Step2({ settings: s, profile, overrides, setOverride, pct, setPct, current, baseline, onPrev, onNext }: Props) {
+function ProfileView({ p }: { p: BusinessProfile }) {
   const [tab, setTab] = useState(0);
-  const [open, setOpen] = useState(true);
-  const [evi, setEvi] = useState<string | null>(null);
-  const [edit, setEdit] = useState<string | null>(null);
-  const sum = AREA_KEYS.reduce((a, k) => a + pct[k], 0);
-  const valid = sum === 100;
-  const rows = profile.filter((r) => r.companyId === s.targetId && r.area === TABS[tab].area);
-  const nowRank = rankedOnly(current);
-  const baseRankMap = new Map(rankedOnly(baseline).map((r) => [r.peer.id, r.rank as number]));
-
-  const setW = (k: AreaKey, v: number) => setPct({ ...pct, [k]: Math.max(0, Math.min(100, Math.round(v) || 0)) });
-
+  const [open, setOpen] = useState<string | null>(null);
+  const sec = p.sections[Math.min(tab, p.sections.length - 1)];
+  const ev = new Map(p.evidence.map((e) => [e.id, e]));
   return (
-    <Page step={2} mode={s.mode} eyebrow="PROFILE & CRITERIA" title="프로필 확인, 비교 기준 설정" sub="대상기업의 비즈니스 프로필을 확인하고 네 영역의 가중치를 설정하세요.">
+    <>
       <section className="card">
         <div className="card-head pad">
-          <div>
-            <h2>대상기업 비즈니스 프로필</h2>
-            <div className="small muted">{s.period.replace("FY", "")}년 · {s.fsBasis === "CFS" ? "연결" : "별도"} · {s.currency} / 프로필 {s.profileVersion}{s.mode === "예시" ? " / 모든 값은 가상 예시" : ""}</div>
-          </div>
-          <button className="link" onClick={() => setOpen(!open)}>{open ? "접기" : "펼치기"}</button>
+          <div><h2>{p.companyName} Business Profile</h2>
+            <small>{[p.industry, p.period, p.basis, p.version].filter(Boolean).join(" · ")}</small></div>
+          {p.generatedAt && <small>생성 {p.generatedAt}</small>}
         </div>
-        {open && (
-          <>
-            <div className="tabs" role="tablist">
-              {TABS.map((t, i) => (
-                <button key={t.label} role="tab" aria-selected={tab === i} className={`tab ${tab === i ? "on" : ""}`} onClick={() => { setTab(i); setEvi(null); setEdit(null); }}>{t.label}</button>
-              ))}
-            </div>
-            <div className="table profile">
-              <div className="tr th"><span>항목</span><span>값 · {s.mode === "예시" ? "가상 예시" : "추출값"}</span><span>근거 · 수정</span></div>
-              {rows.map((r) => {
-                const edited = overrides[r.key] !== undefined;
-                const shown = edited ? overrides[r.key] : profileValue(r.key, r.value);
-                return (
-                  <div key={r.key}>
-                    <div className="tr">
-                      <span className="muted-d">{keyLabel(r.key)}</span>
-                      {edit === r.key ? (
-                        <input className="inline-edit" autoFocus defaultValue={shown} onBlur={(e) => { setOverride(r.key, e.target.value); setEdit(null); }} onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()} />
-                      ) : (
-                        <b className="val">{shown}{edited && <em className="edited">수정됨</em>}</b>
-                      )}
-                      <span className="row-links">
-                        <button className="link" onClick={() => setEvi(evi === r.key ? null : r.key)}>{evi === r.key ? "닫기" : "보기"}</button>
-                        <button className="link" onClick={() => setEdit(r.key)}>수정</button>
-                      </span>
-                    </div>
-                    {evi === r.key && (
-                      <div className="evi">
-                        근거 ID {r.evidenceId} · 추출 상태 <b>{r.extractStatus}</b> · 입력 상태 {r.inputStatus} · {r.period}<br />
-                        정의 / 원문 위치: {r.definition} · 검토자 {r.reviewer}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-            <p className="small muted pad-x">원자료와 계산값을 구분합니다. 근거가 없는 항목은 추정하지 않고 미확인으로 둡니다. 수정값은 프로필 기록에만 저장되며, 점수 재계산에는 외부 RAG 재실행이 필요합니다.</p>
-          </>
-        )}
-      </section>
-
-      <section className="card pad">
-        <div className="card-head"><h2>영역별 가중치</h2><span className={`sumchip ${valid ? "ok" : "bad"}`}>합계 {sum}%</span></div>
-        <p className="small muted">네 영역의 합계가 100%여야 점수가 산출됩니다. 자동으로 정규화하지 않습니다. 가중치를 바꿔도 RAG 재검색은 필요하지 않습니다.</p>
-        <div className="imp-list">
-          {AREAS.map((a) => (
-            <div className="imp" key={a.key}>
-              <div className="imp-name" style={{ borderColor: a.color }}>
-                <b>{a.label}</b><span className="small muted">{a.desc}</span>
+        {p.summary && <p className="pad-x muted-d">{p.summary}</p>}
+        <div className="tabs" role="tablist">
+          {p.sections.map((s, i) => (
+            <button key={s.key} role="tab" aria-selected={tab === i} className={`tab ${tab === i ? "on" : ""}`} onClick={() => { setTab(i); setOpen(null); }}>{s.label}</button>
+          ))}
+        </div>
+        <div className="table profile">
+          <div className="tr th"><span>항목</span><span>내용</span><span>근거</span></div>
+          {sec.items.map((it) => (
+            <div key={it.key}>
+              <div className="tr">
+                <span>{it.label}</span>
+                <span className={`val ${it.value === "미확인" ? "muted" : ""}`}>{it.value}</span>
+                <span>{it.evidenceIds.length > 0
+                  ? <button className="link" aria-expanded={open === it.key} onClick={() => setOpen(open === it.key ? null : it.key)}>{open === it.key ? "닫기" : `보기 (${it.evidenceIds.length})`}</button>
+                  : <span className="muted small">없음</span>}</span>
               </div>
-              <div className="wctl">
-                <input type="range" min={0} max={100} step={5} value={pct[a.key]} onChange={(e) => setW(a.key, Number(e.target.value))} aria-label={`${a.label} 가중치`} style={{ accentColor: "#2762e7" }} />
-                <span className="input num"><input inputMode="numeric" value={pct[a.key]} onChange={(e) => setW(a.key, Number(e.target.value.replace(/\D/g, "")))} /><em>%</em></span>
-              </div>
-              <div className="imp-pct mono" style={{ color: a.color }}>{pct[a.key]}%</div>
+              {open === it.key && (
+                <div className="evi">
+                  {it.evidenceIds.map((id) => {
+                    const e = ev.get(id);
+                    return e ? <div key={id}><b>{e.source}</b>{e.locator ? ` · ${e.locator}` : ""}{e.quote ? ` — “${e.quote}”` : ""}</div> : <div key={id}>근거 {id} (상세 없음)</div>;
+                  })}
+                </div>
+              )}
             </div>
           ))}
         </div>
-        {!valid && <div className="warn">가중치 합계가 {sum}%입니다. 합계를 100%로 맞춰야 다음 단계로 진행할 수 있습니다.</div>}
       </section>
+      <div className="info-bar">이 Business Profile은 다음 단계에서 BGE-M3 임베딩과 언어네트워크를 결합(Late Fusion)해 유사기업 Top 5를 고르는 입력으로 쓰입니다.</div>
+    </>
+  );
+}
 
-      <section className="card pad">
-        <div className="card-head"><h2>예상 순위 변화</h2><span className="muted small">파일 기본 가중치 대비</span></div>
-        {valid ? (
-          <div className="table rankchg">
-            <div className="tr th"><span>기업</span><span>현재 순위</span><span>기본 순위</span><span>변화</span><span>종합유사도</span></div>
-            {nowRank.map((r) => {
-              const before = baseRankMap.get(r.peer.id);
-              const d = before != null && r.rank != null ? before - r.rank : 0;
-              return (
-                <div className="tr" key={r.peer.id}>
-                  <span>{r.peer.name}</span><span className="mono">{r.rank}</span><span className="mono">{before ?? "—"}</span>
-                  <span className={`mono ${d > 0 ? "up" : d < 0 ? "down" : ""}`}>{d > 0 ? `▲ ${d}` : d < 0 ? `▼ ${-d}` : "–"}</span>
-                  <span className="mono blue">{(r.total as number).toFixed(1)}</span>
-                </div>
-              );
-            })}
-          </div>
-        ) : (<div className="empty">합계가 100%가 되면 예상 순위가 표시됩니다.</div>)}
-      </section>
-
-      <div className="info-bar">유사도는 대상기업과 비교기업의 비슷한 특성을 나타내며 투자 매력도가 아닙니다. 가중치는 비교기업 선정에만 적용되고, 최종 평가에는 선택 기업의 PER 분포(Q1–Q3)를 사용합니다.</div>
-
-      <Footer hint={`${s.targetName} / ${s.industry}`}>
-        <button className="btn" onClick={onPrev}>이전 단계</button>
-        <button className="btn primary" disabled={!valid} onClick={onNext}>비교기업 탐색</button>
-      </Footer>
-    </Page>
+export default function Step2({ company, onBack, onNext }: Props) {
+  const res = useResource(`profile:${company.id}`, (s) => api.getProfile(company.id, s), (p: BusinessProfile) => p.sections.length === 0);
+  const ready = res.status === "success" || res.status === "empty";
+  return (
+    <>
+      {res.status === "loading" && <Loading title={`${company.name} 공시를 분석하는 중입니다`} onCancel={onBack} note="공시에서 Business Profile을 생성합니다." />}
+      <PageHead step={1} eyebrow="PROFILE" title="Business Profile 확인" sub={`${company.name}의 공시 기반 사업 프로필입니다.`} />
+      {res.status === "error" && res.error && <ErrorBox message={describeError(res.error)} onRetry={res.reload} label="프로필" />}
+      {res.status === "empty" && <div className="empty">생성된 Business Profile이 없습니다. 공시 데이터가 있는지 확인해 주세요.</div>}
+      {res.status === "success" && res.data && <ProfileView p={res.data} />}
+      <div className="actions">
+        <span className="hint">{ready ? "" : " "}</span>
+        <div className="btns">
+          <button className="btn" onClick={onBack}>이전</button>
+          <button className="btn primary" disabled={res.status !== "success"} onClick={onNext}>유사기업 찾기</button>
+        </div>
+      </div>
+    </>
   );
 }

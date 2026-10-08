@@ -1,0 +1,53 @@
+{
+  "target": {
+    "company_id": "TGT",
+    "nodes": [
+      { "id": "k1", "label": "구독", "centrality": 0.92 },
+      { "id": "k2", "label": "협업", "centrality": 0.84 },
+      { "id": "k3", "label": "클라우드", "centrality": 0.8 },
+      { "id": "k4", "label": "워크플로", "centrality": 0.66 },
+      { "id": "k5", "label": "중견기업", "centrality": 0.58 },
+      { "id": "k6", "label": "직접영업", "centrality": 0.5 },
+      { "id": "k7", "label": "개인정보", "centrality": 0.46 },
+      { "id": "k8", "label": "자동화", "centrality": 0.41 },
+      { "id": "k9", "label": "API", "centrality": 0.38 },
+      { "id": "k10", "label": "가격경쟁", "centrality": 0.3 },
+      { "id": "k11", "label": "고객사", "centrality": 0.52 },
+      { "id": "k12", "label": "보안", "centrality": 0.34 }
+    ],
+    "edges": [
+      { "source": "k1", "target": "k2", "weight": 0.9 }, { "source": "k1", "target": "k3", "weight": 0.82 },
+      { "source": "k1", "target": "k11", "weight": 0.7 }, { "source": "k2", "target": "k4", "weight": 0.74 },
+      { "source": "k2", "target": "k3", "weight": 0.66 }, { "source": "k3", "target": "k12", "weight": 0.48 },
+      { "source": "k3", "target": "k9", "weight": 0.52 }, { "source": "k4", "target": "k8", "weight": 0.6 },
+      { "source": "k5", "target": "k11", "weight": 0.58 }, { "source": "k5", "target": "k6", "weight": 0.55 },
+      { "source": "k6", "target": "k1", "weight": 0.44 }, { "source": "k7", "target": "k12", "weight": 0.5 },
+      { "source": "k7", "target": "k3", "weight": 0.36 }, { "source": "k10", "target": "k1", "weight": 0.32 },
+      { "source": "k8", "target": "k9", "weight": 0.4 }
+    ]
+  },
+  "peer": {
+    "company_id": "PEER",
+    "nodes": [
+      { "id": "p1", "label": "구독", "centrality": 0.9 },
+      { "id": "p2", "label": "협업", "centrality": 0.78 },
+      { "id": "p3", "label": "클라우드", "centrality": 0.76 },
+      { "id": "p4", "label": "워크플로", "centrality": 0.6 },
+      { "id": "p5", "label": "대기업", "centrality": 0.55 },
+      { "id": "p6", "label": "온라인가입", "centrality": 0.48 },
+      { "id": "p7", "label": "보안", "centrality": 0.5 },
+      { "id": "p8", "label": "자동화", "centrality": 0.44 },
+      { "id": "p9", "label": "API", "centrality": 0.42 },
+      { "id": "p10", "label": "해외진출", "centrality": 0.36 },
+      { "id": "p11", "label": "고객사", "centrality": 0.5 }
+    ],
+    "edges": [
+      { "source": "p1", "target": "p2", "weight": 0.88 }, { "source": "p1", "target": "p3", "weight": 0.8 },
+      { "source": "p1", "target": "p11", "weight": 0.68 }, { "source": "p2", "target": "p4", "weight": 0.7 },
+      { "source": "p3", "target": "p7", "weight": 0.54 }, { "source": "p3", "target": "p9", "weight": 0.5 },
+      { "source": "p4", "target": "p8", "weight": 0.58 }, { "source": "p5", "target": "p11", "weight": 0.6 },
+      { "source": "p6", "target": "p1", "weight": 0.46 }, { "source": "p7", "target": "p5", "weight": 0.4 },
+      { "source": "p10", "target": "p3", "weight": 0.34 }, { "source": "p8", "target": "p9", "weight": 0.42 }
+    ]
+  }
+}

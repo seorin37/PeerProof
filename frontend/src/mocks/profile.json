@@ -1,0 +1,57 @@
+{
+  "company_id": "TGT",
+  "company_name": "예시테크",
+  "industry": "B2B 업무용 SaaS",
+  "period": "FY2025",
+  "basis": "연결",
+  "version": "mock-v0",
+  "generated_at": "2026-10-08T09:00:00+09:00",
+  "summary": "가상 예시 프로필입니다. 실제 공시에서 추출한 값이 아니며 백엔드 연결 전 화면 구성을 위한 임시 데이터입니다.",
+  "sections": [
+    {
+      "key": "business", "label": "Business Model",
+      "items": [
+        { "key": "products", "label": "제품 · 서비스", "value": "기업용 업무 관리 SaaS", "evidence_ids": ["E1"] },
+        { "key": "customers", "label": "고객 유형", "value": "중견·중소기업", "evidence_ids": ["E2"] },
+        { "key": "revenue_model", "label": "수익 모델", "value": "월/연 구독료", "evidence_ids": ["E3"] },
+        { "key": "channels", "label": "유통 채널", "value": "직접 영업 + 온라인 가입", "evidence_ids": ["E4"] },
+        { "key": "differentiation", "label": "차별화 요소", "value": null, "evidence_ids": [], "status": "근거 부족" }
+      ]
+    },
+    {
+      "key": "growth", "label": "Growth",
+      "items": [
+        { "key": "revenue_yoy", "label": "매출 성장률", "value": "25.0%", "evidence_ids": ["E5"] },
+        { "key": "market", "label": "시장 환경", "value": "기업 디지털 전환 수요", "evidence_ids": ["E6"] },
+        { "key": "expansion", "label": "확장 방향", "value": "국내 고객군 확대", "evidence_ids": ["E6"] }
+      ]
+    },
+    {
+      "key": "risk", "label": "Risk",
+      "items": [
+        { "key": "customer", "label": "고객 집중", "value": "상위 고객 매출 집중", "evidence_ids": ["E7"] },
+        { "key": "competition", "label": "경쟁 구도", "value": "가격 경쟁 심화", "evidence_ids": ["E7"] },
+        { "key": "regulatory", "label": "규제", "value": "개인정보 규제 대응", "evidence_ids": ["E8"] }
+      ]
+    },
+    {
+      "key": "finance", "label": "Finance",
+      "items": [
+        { "key": "operating_margin", "label": "영업이익률", "value": "15.0%", "evidence_ids": ["E9"] },
+        { "key": "debt_ratio", "label": "부채 / 자산", "value": "40.0%", "evidence_ids": ["E9"] },
+        { "key": "net_income", "label": "귀속 당기순이익", "value": "120억 원", "evidence_ids": ["E9"] }
+      ]
+    }
+  ],
+  "evidence": [
+    { "id": "E1", "source": "가상 예시 / 실공시 없음", "locator": "사업의 내용 · 주요 제품", "published_at": "2026-10-08" },
+    { "id": "E2", "source": "가상 예시 / 실공시 없음", "locator": "사업의 내용 · 고객", "published_at": "2026-10-08" },
+    { "id": "E3", "source": "가상 예시 / 실공시 없음", "locator": "매출에 관한 사항", "published_at": "2026-10-08" },
+    { "id": "E4", "source": "가상 예시 / 실공시 없음", "locator": "판매 경로", "published_at": "2026-10-08" },
+    { "id": "E5", "source": "가상 예시 / 실공시 없음", "locator": "연결 손익계산서", "published_at": "2026-10-08" },
+    { "id": "E6", "source": "가상 예시 / 실공시 없음", "locator": "사업의 개요 · 시장", "published_at": "2026-10-08" },
+    { "id": "E7", "source": "가상 예시 / 실공시 없음", "locator": "위험요소", "published_at": "2026-10-08" },
+    { "id": "E8", "source": "가상 예시 / 실공시 없음", "locator": "규제 환경", "published_at": "2026-10-08" },
+    { "id": "E9", "source": "가상 예시 / 실공시 없음", "locator": "연결 재무제표", "published_at": "2026-10-08" }
+  ]
+}

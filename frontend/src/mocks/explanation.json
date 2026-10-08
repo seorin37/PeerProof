@@ -1,0 +1,21 @@
+{
+  "target_id": "TGT",
+  "peer_id": "PEER",
+  "summary": "{target}와 {peer}는 구독형 B2B SaaS라는 수익 구조와 협업·클라우드 중심의 키워드 구조를 공유합니다. 다만 고객 규모와 판매 방식에서 차이가 있습니다. (가상 예시 설명이며 실제 RAG·LLM 결과가 아닙니다.)",
+  "similarities": [
+    { "text": "두 기업 모두 월/연 구독료를 주된 수익원으로 삼는 것으로 기술됩니다.", "evidence_ids": ["X1", "X2"] },
+    { "text": "'구독', '협업', '클라우드'가 언어네트워크에서 중심성이 높은 공통 키워드입니다.", "evidence_ids": ["X3"] }
+  ],
+  "differences": [
+    { "text": "{peer}는 대기업 고객 비중이 높고 {target}는 중견·중소기업 중심입니다.", "evidence_ids": ["X2", "X4"] },
+    { "text": "{peer}는 해외 진출 관련 키워드가 나타나지만 {target}는 국내 고객군 확대에 집중합니다.", "evidence_ids": ["X4"] }
+  ],
+  "evidence": [
+    { "id": "X1", "source": "가상 예시 / 실공시 없음 (대상기업)", "locator": "매출에 관한 사항", "quote": "가상 예시 문장: 구독 기반 매출 인식", "published_at": "2026-10-08" },
+    { "id": "X2", "source": "가상 예시 / 실공시 없음 (비교기업)", "locator": "사업의 내용 · 고객", "quote": "가상 예시 문장: 주요 고객은 대기업", "published_at": "2026-10-08" },
+    { "id": "X3", "source": "언어네트워크 (가상 예시)", "locator": "키워드 중심성 상위 3개", "published_at": "2026-10-08" },
+    { "id": "X4", "source": "가상 예시 / 실공시 없음 (비교기업)", "locator": "사업의 개요 · 해외", "quote": "가상 예시 문장: 해외 시장 진출 계획", "published_at": "2026-10-08" }
+  ],
+  "generated_at": "2026-10-08T09:10:00+09:00",
+  "model": "mock"
+}

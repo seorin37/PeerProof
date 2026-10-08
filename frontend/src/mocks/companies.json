@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "company_id": "TGT",
+      "name": "예시테크",
+      "industry": "B2B 업무용 SaaS",
+      "market": "KOSDAQ 예정",
+      "sector": "소프트웨어·IT"
+    },
+    {
+      "company_id": "TGT2",
+      "name": "예시클라우드",
+      "industry": "B2B 업무용 SaaS",
+      "market": "KOSDAQ 예정",
+      "sector": "소프트웨어·IT"
+    },
+    {
+      "company_id": "TGT3",
+      "name": "예시시큐어",
+      "industry": "보안 구독 서비스",
+      "market": "KOSDAQ 예정",
+      "sector": "소프트웨어·IT"
+    },
+    {
+      "company_id": "TGT4",
+      "name": "예시바이오",
+      "industry": "바이오·헬스케어",
+      "market": "KOSDAQ 예정",
+      "sector": "바이오·헬스케어"
+    },
+    {
+      "company_id": "TGT5",
+      "name": "예시칩스",
+      "industry": "반도체·전자",
+      "market": "KOSPI 예정",
+      "sector": "반도체·전자"
+    },
+    {
+      "company_id": "TGT6",
+      "name": "예시에너지",
+      "industry": "에너지·소재",
+      "market": "KOSPI 예정",
+      "sector": "에너지·소재"
+    }
+  ]
+}
