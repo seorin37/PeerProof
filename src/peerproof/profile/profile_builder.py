@@ -182,6 +182,21 @@ class CompanyProfileBuilder:
             or metadata.get("page_number")
         )
 
+        rcept_no = (
+            result.get("rcept_no")
+            or metadata.get("rcept_no")
+        )
+
+        filing_date = (
+            result.get("filing_date")
+            or metadata.get("filing_date")
+        )
+
+        period = (
+            result.get("period")
+            or metadata.get("period")
+        )
+
         return {
             "chunk_id": str(chunk_id),
 
@@ -194,6 +209,12 @@ class CompanyProfileBuilder:
             "section": section,
 
             "page": page,
+
+            "rcept_no": rcept_no,
+
+            "filing_date": filing_date,
+
+            "period": period,
 
             "metadata": metadata,
 
@@ -517,6 +538,12 @@ class CompanyProfileBuilder:
                             "section"
                         )
                     ),
+
+                    "rcept_no": evidence.get("rcept_no"),
+
+                    "filing_date": evidence.get("filing_date"),
+
+                    "period": evidence.get("period"),
 
                     "content": (
                         evidence.get(

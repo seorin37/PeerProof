@@ -94,7 +94,34 @@ def save_json(
 # 4. Target Business Profile 찾기
 # =========================================================
 
+def apply_cli_overrides():
+    """기본 경로는 그대로 두고, 인자로 준 경우에만 입력/출력 경로를 바꾼다."""
+    import argparse
+
+    global CANDIDATE_PROFILES_PATH, OUTPUT_PATH, TARGET_PROFILE_OVERRIDE
+
+    parser = argparse.ArgumentParser(description="유사도 계산")
+    parser.add_argument("--target-profile", help="대상기업 프로필 JSON (기본: companies/*/business_profile.json)")
+    parser.add_argument("--candidates", help="후보 프로필 JSON (기본: candidate_profiles/profiles.json)")
+    parser.add_argument("--output", help="결과 JSON 경로 (기본: 이전 결과 파일을 덮어쓴다)")
+    args = parser.parse_args()
+
+    if args.target_profile:
+        TARGET_PROFILE_OVERRIDE = Path(args.target_profile)
+    if args.candidates:
+        CANDIDATE_PROFILES_PATH = Path(args.candidates)
+    if args.output:
+        OUTPUT_PATH = Path(args.output)
+
+
+TARGET_PROFILE_OVERRIDE = None
+
+
 def find_target_profile():
+
+    if TARGET_PROFILE_OVERRIDE is not None:
+
+        return TARGET_PROFILE_OVERRIDE
 
     matches = list(
         TARGET_COMPANIES_DIR.glob(
@@ -294,6 +321,8 @@ def cosine_similarity(
 # =========================================================
 
 def main():
+
+    apply_cli_overrides()
 
     print()
 

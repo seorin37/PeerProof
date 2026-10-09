@@ -144,16 +144,14 @@ def main():
         return
 
     stock_code = input(
-        "종목코드를 입력하세요: "
+        "종목코드를 입력하세요 "
+        "(미상장 기업은 비워 두면 기업명으로 찾습니다): "
     ).strip()
 
-    if not stock_code:
-
-        print(
-            "종목코드를 입력해야 합니다."
-        )
-
-        return
+    corp_code_input = input(
+        "DART 고유번호(corp_code 8자리)를 입력하세요 "
+        "(모르면 비워 두세요): "
+    ).strip()
 
     ipo_date = input(
         "IPO 기준일을 입력하세요 (YYYYMMDD): "
@@ -196,7 +194,7 @@ def main():
     )
 
     print(
-        f"종목코드      : {stock_code}"
+        f"종목코드      : {stock_code or '(없음: 기업명으로 검색)'}"
     )
 
     print(
@@ -229,6 +227,7 @@ def main():
         corp_service.find_exact_company(
             corp_name=company_name,
             stock_code=stock_code,
+            corp_code=corp_code_input or None,
         )
     )
 
@@ -241,7 +240,9 @@ def main():
 
         print(
             "기업명과 종목코드를 "
-            "확인하세요."
+            "확인하세요. 종목코드 없이 찾는 경우 "
+            "기업명이 DART에 정확히 하나만 "
+            "있어야 합니다."
         )
 
         return

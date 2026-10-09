@@ -159,6 +159,7 @@ class CorpCodeService:
         self,
         corp_name: str,
         stock_code: str | None = None,
+        corp_code: str | None = None,
     ):
         """
         정확한 회사명 + 종목코드로 기업 선택.
@@ -174,6 +175,14 @@ class CorpCodeService:
         companies = (
             self.get_all_companies()
         )
+
+        # 고유번호(corp_code)가 있으면 가장 우선한다. 미상장 기업도 갖고 있고 유일하다.
+        if corp_code:
+            corp_code = corp_code.strip()
+            for company in companies:
+                if company["corp_code"] == corp_code:
+                    return company
+            return None
 
         # 종목코드가 있다면 종목코드를 최우선으로 사용
         if stock_code:
