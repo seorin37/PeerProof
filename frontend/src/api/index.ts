@@ -3,10 +3,10 @@
  * mock/live 전환, 경로 조립, 응답 변환(어댑터)을 여기서 한 번에 처리합니다.
  */
 import type {
-  BusinessProfile, CompanyNetwork, CompanySummary, Explanation, SimilarResult, Valuation,
+  BusinessProfile, CompanyNetwork, CompanySummary, Explanation, MetricsTable, SimilarResult,
 } from "../types/domain";
 import {
-  adaptCompanies, adaptExplanation, adaptNetwork, adaptProfile, adaptSimilar, adaptValuation,
+  adaptCompanies, adaptExplanation, adaptNetwork, adaptProfile, adaptMetrics, adaptSimilar,
 } from "./adapters";
 import { API_MODE } from "./config";
 import { getJson } from "./http";
@@ -30,8 +30,8 @@ export const api = {
     adaptNetwork(await fetchRaw("network", { companyId }, signal)),
   getExplanation: async (companyId: string, peerId: string, signal?: AbortSignal): Promise<Explanation> =>
     adaptExplanation(await fetchRaw("explanation", { companyId, peerId }, signal)),
-  getValuation: async (companyId: string, signal?: AbortSignal): Promise<Valuation> =>
-    adaptValuation(await fetchRaw("valuation", { companyId }, signal)),
+  getMetrics: async (companyId: string, signal?: AbortSignal): Promise<MetricsTable> =>
+    adaptMetrics(await fetchRaw("metrics", { companyId }, signal)),
 };
 
 export { API_MODE };

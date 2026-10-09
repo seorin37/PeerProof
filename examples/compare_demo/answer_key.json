@@ -1,0 +1,56 @@
+{
+  "_설명": "가상 데이터(시연용). 실제 정답지 아님",
+  "target_company": "가상대상",
+  "analysis_as_of": "2023-12-21",
+  "source_filing": {
+    "rcept_no": "",
+    "type": "가상"
+  },
+  "peers": [
+    {
+      "company_name": "가상정답1",
+      "corp_code": "90000001",
+      "stock_code": "900001"
+    },
+    {
+      "company_name": "가상정답2",
+      "corp_code": "90000002",
+      "stock_code": "900002"
+    },
+    {
+      "company_name": "가상정답3",
+      "corp_code": "90000003",
+      "stock_code": "900003"
+    },
+    {
+      "company_name": "가상정답4",
+      "corp_code": "90000004",
+      "stock_code": "900004"
+    },
+    {
+      "company_name": "가상정답5",
+      "corp_code": "90000005",
+      "stock_code": "900005"
+    },
+    {
+      "company_name": "가상정답6",
+      "corp_code": "90000006",
+      "stock_code": "900006"
+    },
+    {
+      "company_name": "가상정답7",
+      "corp_code": "90000007",
+      "stock_code": "900007"
+    },
+    {
+      "company_name": "가상정답8",
+      "corp_code": "90000008",
+      "stock_code": "900008"
+    },
+    {
+      "company_name": "가상정답9",
+      "corp_code": "90000009",
+      "stock_code": "900009"
+    }
+  ]
+}

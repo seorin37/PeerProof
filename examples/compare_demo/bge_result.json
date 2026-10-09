@@ -1,0 +1,121 @@
+{
+  "target": {
+    "company_name": "가상대상"
+  },
+  "results": [
+    {
+      "company_name": "가상정답1",
+      "corp_code": "90000001",
+      "stock_code": "900001",
+      "bge_similarity": 0.7621
+    },
+    {
+      "company_name": "가상정답2",
+      "corp_code": "90000002",
+      "stock_code": "900002",
+      "bge_similarity": 0.7149
+    },
+    {
+      "company_name": "가상정답3",
+      "corp_code": "90000003",
+      "stock_code": "900003",
+      "bge_similarity": 0.8526
+    },
+    {
+      "company_name": "가상정답4",
+      "corp_code": "90000004",
+      "stock_code": "900004",
+      "bge_similarity": 0.6634
+    },
+    {
+      "company_name": "가상정답5",
+      "corp_code": "90000005",
+      "stock_code": "900005",
+      "bge_similarity": 0.6616
+    },
+    {
+      "company_name": "가상정답6",
+      "corp_code": "90000006",
+      "stock_code": "900006",
+      "bge_similarity": 0.8014
+    },
+    {
+      "company_name": "가상정답7",
+      "corp_code": "90000007",
+      "stock_code": "900007",
+      "bge_similarity": 0.8016
+    },
+    {
+      "company_name": "가상정답8",
+      "corp_code": "90000008",
+      "stock_code": "900008",
+      "bge_similarity": 0.819
+    },
+    {
+      "company_name": "가상정답9",
+      "corp_code": "90000009",
+      "stock_code": "900009",
+      "bge_similarity": 0.7559
+    },
+    {
+      "company_name": "가상형식1",
+      "corp_code": "90000010",
+      "stock_code": "900010",
+      "bge_similarity": 0.7087
+    },
+    {
+      "company_name": "가상형식2",
+      "corp_code": "90000011",
+      "stock_code": "900011",
+      "bge_similarity": 0.6834
+    },
+    {
+      "company_name": "가상형식3",
+      "corp_code": "90000012",
+      "stock_code": "900012",
+      "bge_similarity": 0.7434
+    },
+    {
+      "company_name": "가상형식4",
+      "corp_code": "90000013",
+      "stock_code": "900013",
+      "bge_similarity": 0.7326
+    },
+    {
+      "company_name": "가상상이1",
+      "corp_code": "90000014",
+      "stock_code": "900014",
+      "bge_similarity": 0.4475
+    },
+    {
+      "company_name": "가상상이2",
+      "corp_code": "90000015",
+      "stock_code": "900015",
+      "bge_similarity": 0.6508
+    },
+    {
+      "company_name": "가상상이3",
+      "corp_code": "90000016",
+      "stock_code": "900016",
+      "bge_similarity": 0.5931
+    },
+    {
+      "company_name": "가상외부1",
+      "corp_code": "90000017",
+      "stock_code": "900017",
+      "bge_similarity": 0.5923
+    },
+    {
+      "company_name": "가상외부2",
+      "corp_code": "90000018",
+      "stock_code": "900018",
+      "bge_similarity": 0.558
+    },
+    {
+      "company_name": "가상외부3",
+      "corp_code": "90000019",
+      "stock_code": "900019",
+      "bge_similarity": 0.527
+    }
+  ]
+}

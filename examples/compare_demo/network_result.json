@@ -1,0 +1,159 @@
+{
+  "target": {
+    "company_name": "가상대상"
+  },
+  "results": [
+    {
+      "company_name": "가상정답1",
+      "corp_code": "90000001",
+      "stock_code": "900001",
+      "semantic_keyword_jaccard": 0.4909,
+      "soft_weighted_edge_jaccard": 0.4886,
+      "weighted_centrality_cosine": 0.5087
+    },
+    {
+      "company_name": "가상정답2",
+      "corp_code": "90000002",
+      "stock_code": "900002",
+      "semantic_keyword_jaccard": 0.4329,
+      "soft_weighted_edge_jaccard": 0.3539,
+      "weighted_centrality_cosine": 0.5428
+    },
+    {
+      "company_name": "가상정답3",
+      "corp_code": "90000003",
+      "stock_code": "900003",
+      "semantic_keyword_jaccard": 0.4699,
+      "soft_weighted_edge_jaccard": 0.3858,
+      "weighted_centrality_cosine": 0.4912
+    },
+    {
+      "company_name": "가상정답4",
+      "corp_code": "90000004",
+      "stock_code": "900004",
+      "semantic_keyword_jaccard": 0.5184,
+      "soft_weighted_edge_jaccard": 0.434,
+      "weighted_centrality_cosine": 0.5763
+    },
+    {
+      "company_name": "가상정답5",
+      "corp_code": "90000005",
+      "stock_code": "900005",
+      "semantic_keyword_jaccard": 0.3105,
+      "soft_weighted_edge_jaccard": 0.3021,
+      "weighted_centrality_cosine": 0.3721
+    },
+    {
+      "company_name": "가상정답6",
+      "corp_code": "90000006",
+      "stock_code": "900006",
+      "semantic_keyword_jaccard": 0.4463,
+      "soft_weighted_edge_jaccard": 0.472,
+      "weighted_centrality_cosine": 0.511
+    },
+    {
+      "company_name": "가상정답7",
+      "corp_code": "90000007",
+      "stock_code": "900007",
+      "semantic_keyword_jaccard": 0.4815,
+      "soft_weighted_edge_jaccard": 0.4298,
+      "weighted_centrality_cosine": 0.678
+    },
+    {
+      "company_name": "가상정답8",
+      "corp_code": "90000008",
+      "stock_code": "900008",
+      "semantic_keyword_jaccard": 0.5458,
+      "soft_weighted_edge_jaccard": 0.5412,
+      "weighted_centrality_cosine": 0.6474
+    },
+    {
+      "company_name": "가상정답9",
+      "corp_code": "90000009",
+      "stock_code": "900009",
+      "semantic_keyword_jaccard": 0.4415,
+      "soft_weighted_edge_jaccard": 0.3611,
+      "weighted_centrality_cosine": 0.487
+    },
+    {
+      "company_name": "가상형식1",
+      "corp_code": "90000010",
+      "stock_code": "900010",
+      "semantic_keyword_jaccard": 0.3434,
+      "soft_weighted_edge_jaccard": 0.3071,
+      "weighted_centrality_cosine": 0.444
+    },
+    {
+      "company_name": "가상형식2",
+      "corp_code": "90000011",
+      "stock_code": "900011",
+      "semantic_keyword_jaccard": 0.4396,
+      "soft_weighted_edge_jaccard": 0.4564,
+      "weighted_centrality_cosine": 0.5932
+    },
+    {
+      "company_name": "가상형식3",
+      "corp_code": "90000012",
+      "stock_code": "900012",
+      "semantic_keyword_jaccard": 0.5245,
+      "soft_weighted_edge_jaccard": 0.5022,
+      "weighted_centrality_cosine": 0.754
+    },
+    {
+      "company_name": "가상형식4",
+      "corp_code": "90000013",
+      "stock_code": "900013",
+      "semantic_keyword_jaccard": 0.3546,
+      "soft_weighted_edge_jaccard": 0.388,
+      "weighted_centrality_cosine": 0.3756
+    },
+    {
+      "company_name": "가상상이1",
+      "corp_code": "90000014",
+      "stock_code": "900014",
+      "semantic_keyword_jaccard": 0.2662,
+      "soft_weighted_edge_jaccard": 0.2251,
+      "weighted_centrality_cosine": 0.3313
+    },
+    {
+      "company_name": "가상상이2",
+      "corp_code": "90000015",
+      "stock_code": "900015",
+      "semantic_keyword_jaccard": 0.229,
+      "soft_weighted_edge_jaccard": 0.2357,
+      "weighted_centrality_cosine": 0.2946
+    },
+    {
+      "company_name": "가상상이3",
+      "corp_code": "90000016",
+      "stock_code": "900016",
+      "semantic_keyword_jaccard": 0.1511,
+      "soft_weighted_edge_jaccard": 0.1524,
+      "weighted_centrality_cosine": 0.196
+    },
+    {
+      "company_name": "가상외부1",
+      "corp_code": "90000017",
+      "stock_code": "900017",
+      "semantic_keyword_jaccard": 0.2875,
+      "soft_weighted_edge_jaccard": 0.3025,
+      "weighted_centrality_cosine": 0.4233
+    },
+    {
+      "company_name": "가상외부2",
+      "corp_code": "90000018",
+      "stock_code": "900018",
+      "semantic_keyword_jaccard": 0.3491,
+      "soft_weighted_edge_jaccard": 0.2857,
+      "weighted_centrality_cosine": 0.4716
+    },
+    {
+      "company_name": "가상외부3",
+      "corp_code": "90000019",
+      "stock_code": "900019",
+      "semantic_keyword_jaccard": 0.1285,
+      "soft_weighted_edge_jaccard": 0.1345,
+      "weighted_centrality_cosine": 0.1468
+    }
+  ]
+}

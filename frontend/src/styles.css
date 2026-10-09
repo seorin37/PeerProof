@@ -377,3 +377,19 @@ h3 { font-size: 16px; font-weight: 600; }
 .choice.wide { gap: 14px; }
 .header-right .market { color: var(--muted); }
 .side-foot .side-label { display: block; }
+
+/* 비교기업 체크박스 */
+.sim-wrap { display: flex; align-items: stretch; }
+.sim-wrap .sim-row { flex: 1; min-width: 0; }
+.sim-check { display: flex; align-items: center; justify-content: center; width: 48px; flex: none; border-top: 1px solid var(--line); cursor: pointer; background: #fff; }
+.sim-check input { width: 18px; height: 18px; cursor: pointer; }
+.sim-check.head { border-top: 0; background: var(--th); color: var(--muted); font-size: 12px; }
+.sim-head { flex: 1; min-width: 0; }
+/* 재무 지표 비교 */
+.metric-kpis { grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.metric-kpis small.muted { display: block; margin-top: 6px; line-height: 1.4; }
+.mtable .tr { text-align: center; }
+.mtable .tr > span:first-child { text-align: left; }
+.mtable .target-row { background: var(--soft-2); }
+.mtable .stat-row { background: var(--th); }
+@media (max-width: 1024px) { .metric-kpis { grid-template-columns: repeat(2, 1fr); } .mtable { overflow-x: auto; } }

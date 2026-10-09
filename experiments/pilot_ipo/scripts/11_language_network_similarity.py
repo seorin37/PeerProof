@@ -243,12 +243,13 @@ def apply_cli_overrides():
     """기본 경로는 그대로 두고, 인자로 준 경우에만 입력/출력 경로를 바꾼다."""
     import argparse
 
-    global CANDIDATE_PROFILES_PATH, OUTPUT_PATH, TARGET_PROFILE_OVERRIDE
+    global CANDIDATE_PROFILES_PATH, OUTPUT_PATH, TARGET_PROFILE_OVERRIDE, GRAPHS_DIR
 
     parser = argparse.ArgumentParser(description="유사도 계산")
     parser.add_argument("--target-profile", help="대상기업 프로필 JSON (기본: companies/*/business_profile.json)")
     parser.add_argument("--candidates", help="후보 프로필 JSON (기본: candidate_profiles/profiles.json)")
     parser.add_argument("--output", help="결과 JSON 경로 (기본: 이전 결과 파일을 덮어쓴다)")
+    parser.add_argument("--graphs-dir", help="화면용 네트워크 JSON을 <corp_code>.json 으로 저장할 폴더 (주면 대상+후보 모두 저장)")
     args = parser.parse_args()
 
     if args.target_profile:
@@ -257,9 +258,29 @@ def apply_cli_overrides():
         CANDIDATE_PROFILES_PATH = Path(args.candidates)
     if args.output:
         OUTPUT_PATH = Path(args.output)
+    if args.graphs_dir:
+        GRAPHS_DIR = Path(args.graphs_dir)
 
 
 TARGET_PROFILE_OVERRIDE = None
+GRAPHS_DIR = None
+
+
+def save_network_graph(company, graph):
+    """--graphs-dir 를 준 경우에만 화면용 network JSON(<corp_code>.json)을 저장한다."""
+    if GRAPHS_DIR is None:
+        return
+    import sys
+    src = Path(__file__).resolve().parents[3] / "src"
+    if str(src) not in sys.path:
+        sys.path.insert(0, str(src))
+    from peerproof.serving.network_export import graph_to_network
+
+    company_id = (company or {}).get("corp_code")
+    if not company_id:
+        print(f"  [network] corp_code 가 없어 그래프를 저장하지 않습니다: {(company or {}).get('company_name')}")
+        return
+    save_json(GRAPHS_DIR / f"{company_id}.json", graph_to_network(company_id, build_centrality_graph(graph)))
 
 
 def find_target_profile():
@@ -2109,6 +2130,11 @@ def main():
     )
 
 
+    save_network_graph(
+        target_company,
+        target_graph
+    )
+
     print(
         f"Target Company          : "
         f"{target_company['company_name']}"
@@ -2508,6 +2534,11 @@ def main():
 
         results.append(
             result
+        )
+
+        save_network_graph(
+            company,
+            candidate_graph
         )
 
 

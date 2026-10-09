@@ -50,3 +50,11 @@ export function deriveStats(values: number[]) {
   const mid = Math.floor(s.length / 2);
   return { min: s[0], max: s[s.length - 1], median: s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2 };
 }
+
+/** 선형 보간 사분위수 (값이 1개면 q1=q3=그 값) */
+export function quartiles(values: number[]) {
+  if (values.length === 0) return null;
+  const s = [...values].sort((a, b) => a - b);
+  const at = (p: number) => { const i = (s.length - 1) * p; const lo = Math.floor(i); const hi = Math.ceil(i); return s[lo] + (s[hi] - s[lo]) * (i - lo); };
+  return { q1: at(0.25), q3: at(0.75) };
+}

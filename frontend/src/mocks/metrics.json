@@ -1,0 +1,121 @@
+{
+  "target_id": "TGT",
+  "basis": "가상 예시 · DART 사업·반기·분기보고서",
+  "metrics": [
+    {
+      "key": "revenue_growth_rate",
+      "label": "매출 성장률",
+      "unit": "%",
+      "note": "전년 동기 대비"
+    },
+    {
+      "key": "overseas_revenue_ratio",
+      "label": "해외 매출 비중",
+      "unit": "%",
+      "note": null
+    },
+    {
+      "key": "operating_margin",
+      "label": "영업이익률",
+      "unit": "%",
+      "note": "영업이익 ÷ 매출액"
+    },
+    {
+      "key": "net_margin",
+      "label": "순이익률",
+      "unit": "%",
+      "note": "전체 순이익 ÷ 매출액"
+    },
+    {
+      "key": "debt_ratio",
+      "label": "부채비율",
+      "unit": "%",
+      "note": "부채총계 ÷ 자본총계"
+    }
+  ],
+  "rows": [
+    {
+      "company_id": "TGT",
+      "name": "가상 대상",
+      "is_target": true,
+      "period": "2023-01-01 ~ 2023-09-30",
+      "values": {
+        "revenue_growth_rate": 0.38,
+        "overseas_revenue_ratio": 0.22,
+        "operating_margin": 0.21,
+        "net_margin": 0.15,
+        "debt_ratio": 0.55
+      }
+    },
+    {
+      "company_id": "P01",
+      "name": "가상 알파",
+      "is_target": false,
+      "period": "2023-01-01 ~ 2023-09-30",
+      "values": {
+        "revenue_growth_rate": 0.25,
+        "overseas_revenue_ratio": 0.15,
+        "operating_margin": 0.18,
+        "net_margin": 0.12,
+        "debt_ratio": 0.4
+      }
+    },
+    {
+      "company_id": "P02",
+      "name": "가상 베타",
+      "is_target": false,
+      "period": "2023-01-01 ~ 2023-09-30",
+      "values": {
+        "revenue_growth_rate": 0.18,
+        "overseas_revenue_ratio": 0.3,
+        "operating_margin": 0.12,
+        "net_margin": 0.08,
+        "debt_ratio": 0.8
+      }
+    },
+    {
+      "company_id": "P03",
+      "name": "가상 감마",
+      "is_target": false,
+      "period": "2023-01-01 ~ 2023-09-30",
+      "values": {
+        "revenue_growth_rate": 0.32,
+        "overseas_revenue_ratio": null,
+        "operating_margin": 0.22,
+        "net_margin": 0.17,
+        "debt_ratio": 0.35
+      }
+    },
+    {
+      "company_id": "P07",
+      "name": "가상 에타",
+      "is_target": false,
+      "period": "2023-01-01 ~ 2023-09-30",
+      "values": {
+        "revenue_growth_rate": 0.05,
+        "overseas_revenue_ratio": 0.1,
+        "operating_margin": -0.04,
+        "net_margin": -0.06,
+        "debt_ratio": 1.2
+      }
+    },
+    {
+      "company_id": "P04",
+      "name": "가상 델타",
+      "is_target": false,
+      "period": "2023-01-01 ~ 2023-09-30",
+      "values": {
+        "revenue_growth_rate": 0.12,
+        "overseas_revenue_ratio": 0.05,
+        "operating_margin": 0.09,
+        "net_margin": 0.07,
+        "debt_ratio": 0.65
+      }
+    }
+  ],
+  "notes": [
+    "가상 예시 값입니다.",
+    "회사마다 기준 기간이 다를 수 있어 금액이 아닌 비율로만 비교합니다.",
+    "시장가격이 필요한 PER·공모가 범위는 DART 정기보고서만으로는 계산할 수 없어 제외했습니다."
+  ]
+}

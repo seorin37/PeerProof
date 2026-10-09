@@ -108,30 +108,28 @@ export interface Explanation {
   model?: string;
 }
 
-export interface PerPeer {
-  companyId: string;
-  name: string;
-  per: number | null;
-  included: boolean;
+export interface MetricDef {
+  key: string;
+  label: string;
+  unit: string;
   note?: string;
 }
 
-export interface PerStats {
-  min: number | null;
-  q1: number | null;
-  median: number | null;
-  mean: number | null;
-  q3: number | null;
-  max: number | null;
+export interface MetricRow {
+  companyId: string;
+  name: string;
+  isTarget: boolean;
+  /** 지표 key → 값(%). 계산할 수 없으면 null */
+  values: Record<string, number | null>;
+  period?: string;
+  sourceUrl?: string;
 }
 
-export interface Valuation {
+/** DART 공시만으로 계산한 재무 지표 비교표(대상기업 + 후보 전체) */
+export interface MetricsTable {
   targetId: string;
-  currency?: string;
   basis?: string;
-  peers: PerPeer[];
-  /** 백엔드가 주지 않으면 null → 화면에서 포함 기업 PER로 대신 계산해 표시 */
-  stats: PerStats | null;
-  priceBand?: { low: number; high: number };
+  metrics: MetricDef[];
+  rows: MetricRow[];
   notes: string[];
 }

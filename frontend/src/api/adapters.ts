@@ -7,7 +7,7 @@
  */
 import type {
   BusinessProfile, CompanyNetwork, CompanySummary, EvidenceRef, ExplainStatement, Explanation,
-  PerPeer, PerStats, SimilarCompany, SimilarResult, Valuation,
+  MetricRow, MetricsTable, SimilarCompany, SimilarResult,
 } from "../types/domain";
 import { ApiError } from "./errors";
 
@@ -158,35 +158,35 @@ export function adaptExplanation(json: unknown): Explanation {
   };
 }
 
-export function adaptValuation(json: unknown): Valuation {
-  const r = rec(json, "valuation");
-  const peers: PerPeer[] = list(r.peers, "valuation.peers").map((p, i) => {
-    const pr = rec(p, `valuation.peers[${i}]`);
+/** 백엔드 비율(0.153)을 화면 단위(%)로 바꿉니다. */
+export function adaptMetrics(json: unknown): MetricsTable {
+  const r = rec(json, "metrics");
+  const metrics = list(r.metrics, "metrics.metrics").map((m, i) => {
+    const mr = rec(m, `metrics.metrics[${i}]`);
+    return { key: str(mr.key, "metric.key"), label: str(mr.label, "metric.label"), unit: optStr(mr.unit) ?? "%", note: optStr(mr.note) };
+  });
+  const rows: MetricRow[] = list(r.rows, "metrics.rows").map((row, i) => {
+    const rr = rec(row, `metrics.rows[${i}]`);
+    const raw = rr.values == null ? {} : rec(rr.values, `metrics.rows[${i}].values`);
+    const values: Record<string, number | null> = {};
+    metrics.forEach((m) => {
+      const v = optNum(raw[m.key]);
+      values[m.key] = v === null || v === undefined ? null : v * SCORE_SCALE;
+    });
     return {
-      companyId: str(pr.company_id, "peer.company_id"),
-      name: str(pr.name, "peer.name"),
-      per: optNum(pr.per),
-      included: pr.included === true,
-      note: optStr(pr.note),
+      companyId: str(rr.company_id, "row.company_id"),
+      name: str(rr.name, "row.name"),
+      isTarget: rr.is_target === true,
+      values,
+      period: optStr(rr.period),
+      sourceUrl: optStr(rr.source_url),
     };
   });
-  let stats: PerStats | null = null;
-  if (r.stats != null) {
-    const s = rec(r.stats, "valuation.stats");
-    stats = { min: optNum(s.min), q1: optNum(s.q1), median: optNum(s.median), mean: optNum(s.mean), q3: optNum(s.q3), max: optNum(s.max) };
-  }
-  let priceBand: Valuation["priceBand"];
-  if (r.price_band != null) {
-    const b = rec(r.price_band, "valuation.price_band");
-    priceBand = { low: num(b.low, "price_band.low"), high: num(b.high, "price_band.high") };
-  }
   return {
-    targetId: str(r.target_id, "valuation.target_id"),
-    currency: optStr(r.currency),
+    targetId: str(r.target_id, "metrics.target_id"),
     basis: optStr(r.basis),
-    peers,
-    stats,
-    priceBand,
-    notes: list(r.notes, "valuation.notes").filter((n): n is string => typeof n === "string"),
+    metrics,
+    rows,
+    notes: list(r.notes, "metrics.notes").filter((n): n is string => typeof n === "string"),
   };
 }

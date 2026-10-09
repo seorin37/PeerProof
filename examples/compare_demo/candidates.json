@@ -1,0 +1,118 @@
+{
+  "candidates": [
+    {
+      "company_name": "가상정답1",
+      "corp_code": "90000001",
+      "stock_code": "900001",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답2",
+      "corp_code": "90000002",
+      "stock_code": "900002",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답3",
+      "corp_code": "90000003",
+      "stock_code": "900003",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답4",
+      "corp_code": "90000004",
+      "stock_code": "900004",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답5",
+      "corp_code": "90000005",
+      "stock_code": "900005",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답6",
+      "corp_code": "90000006",
+      "stock_code": "900006",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답7",
+      "corp_code": "90000007",
+      "stock_code": "900007",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답8",
+      "corp_code": "90000008",
+      "stock_code": "900008",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상정답9",
+      "corp_code": "90000009",
+      "stock_code": "900009",
+      "role": "A_최종비교기업"
+    },
+    {
+      "company_name": "가상형식1",
+      "corp_code": "90000010",
+      "stock_code": "900010",
+      "role": "B_형식요건탈락"
+    },
+    {
+      "company_name": "가상형식2",
+      "corp_code": "90000011",
+      "stock_code": "900011",
+      "role": "B_형식요건탈락"
+    },
+    {
+      "company_name": "가상형식3",
+      "corp_code": "90000012",
+      "stock_code": "900012",
+      "role": "B_형식요건탈락"
+    },
+    {
+      "company_name": "가상형식4",
+      "corp_code": "90000013",
+      "stock_code": "900013",
+      "role": "B_형식요건탈락"
+    },
+    {
+      "company_name": "가상상이1",
+      "corp_code": "90000014",
+      "stock_code": "900014",
+      "role": "C_사업상이탈락"
+    },
+    {
+      "company_name": "가상상이2",
+      "corp_code": "90000015",
+      "stock_code": "900015",
+      "role": "C_사업상이탈락"
+    },
+    {
+      "company_name": "가상상이3",
+      "corp_code": "90000016",
+      "stock_code": "900016",
+      "role": "C_사업상이탈락"
+    },
+    {
+      "company_name": "가상외부1",
+      "corp_code": "90000017",
+      "stock_code": "900017",
+      "role": "D_신고서밖"
+    },
+    {
+      "company_name": "가상외부2",
+      "corp_code": "90000018",
+      "stock_code": "900018",
+      "role": "D_신고서밖"
+    },
+    {
+      "company_name": "가상외부3",
+      "corp_code": "90000019",
+      "stock_code": "900019",
+      "role": "D_신고서밖"
+    }
+  ]
+}

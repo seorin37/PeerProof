@@ -5,7 +5,7 @@ export const STEPS = [
   { ko: "대상기업 선택", en: "TARGET COMPANY" },
   { ko: "프로필 확인", en: "PROFILE" },
   { ko: "비교기업 검토", en: "PEER SELECTION" },
-  { ko: "가치평가 결과", en: "VALUATION RESULT" },
+  { ko: "재무 지표 비교", en: "FINANCIAL COMPARISON" },
 ];
 
 export function Header() {

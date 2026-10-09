@@ -1,10 +1,10 @@
 /** 백엔드 없이 화면을 개발하기 위한 Mock 서버. api/index.ts 가 mode=mock 일 때만 사용합니다. */
 import companiesJson from "../mocks/companies.json";
 import explanationJson from "../mocks/explanation.json";
+import metricsJson from "../mocks/metrics.json";
 import networkJson from "../mocks/network.json";
 import profileJson from "../mocks/profile.json";
 import similarJson from "../mocks/similar.json";
-import valuationJson from "../mocks/valuation.json";
 import { scenarioFor } from "./config";
 import { ApiError } from "./errors";
 import type { RouteKey, RouteParams } from "./routes";
@@ -64,7 +64,7 @@ const BUILD: Record<RouteKey, (p: RouteParams) => unknown> = {
       .replaceAll("{peer}", nameOf(p.peerId ?? ""));
     return { ...(JSON.parse(text) as object), target_id: p.companyId, peer_id: p.peerId };
   },
-  valuation: (p) => ({ ...clone(valuationJson), target_id: p.companyId ?? "TGT" }),
+  metrics: (p) => ({ ...clone(metricsJson), target_id: p.companyId ?? "TGT" }),
 };
 
 const EMPTY: Record<RouteKey, (p: RouteParams) => unknown> = {
@@ -73,7 +73,7 @@ const EMPTY: Record<RouteKey, (p: RouteParams) => unknown> = {
   similar: (p) => ({ target_id: p.companyId, items: [] }),
   network: (p) => ({ company_id: p.companyId, nodes: [], edges: [] }),
   explanation: (p) => ({ target_id: p.companyId, peer_id: p.peerId, summary: "", similarities: [], differences: [], evidence: [] }),
-  valuation: (p) => ({ target_id: p.companyId, peers: [], notes: [] }),
+  metrics: (p) => ({ target_id: p.companyId, metrics: [], rows: [], notes: [] }),
 };
 
 export async function mockFetch(key: RouteKey, params: RouteParams, signal?: AbortSignal): Promise<unknown> {

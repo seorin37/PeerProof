@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { api } from "../api";
-import { adaptNetwork, adaptSimilar, adaptValuation } from "../api/adapters";
+import { adaptMetrics, adaptNetwork, adaptSimilar } from "../api/adapters";
 import { ApiError } from "../api/errors";
 import { circularLayout, deriveStats, sharedLabels } from "../lib/network";
 
@@ -25,9 +25,12 @@ describe("mock API → domain", () => {
     expect(p.sections.length).toBe(4);
     expect(p.sections.flatMap((s) => s.items).some((i) => i.value === "미확인")).toBe(true);
   });
-  it("가치평가: PER null 기업은 포함되지 않음", async () => {
-    const v = await api.getValuation("TGT");
-    expect(v.peers.filter((p) => p.per === null).every((p) => !p.included)).toBe(true);
+  it("재무 지표: 대상기업이 첫 행, 비율은 %로 변환, 계산 불가는 null", async () => {
+    const m = await api.getMetrics("TGT");
+    expect(m.rows[0].isTarget).toBe(true);
+    expect(m.rows.filter((r) => r.isTarget)).toHaveLength(1);
+    expect(m.rows[0].values.revenue_growth_rate).toBeCloseTo(38, 5);
+    expect(m.rows.some((r) => r.values.overseas_revenue_ratio === null)).toBe(true);
   });
   it("네트워크/설명 응답", async () => {
     const n = await api.getNetwork("P01");
@@ -40,7 +43,7 @@ describe("mock API → domain", () => {
 describe("adapters 방어", () => {
   it("필수 필드 누락 → shape 오류", () => {
     expect(() => adaptSimilar({ foo: 1 })).toThrow(ApiError);
-    expect(() => adaptValuation(null)).toThrow(ApiError);
+    expect(() => adaptMetrics(null)).toThrow(ApiError);
   });
   it("존재하지 않는 노드를 가리키는 간선은 제거", () => {
     const n = adaptNetwork({ company_id: "A", nodes: [{ id: "1", label: "a", centrality: 0.5 }], edges: [{ source: "1", target: "9", weight: 1 }] });
