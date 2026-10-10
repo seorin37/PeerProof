@@ -3,7 +3,7 @@ import { API_MODE } from "../api";
 
 export const STEPS = [
   { ko: "대상기업 선택", en: "TARGET COMPANY" },
-  { ko: "프로필 확인", en: "PROFILE" },
+  { ko: "프로필·중요도 설정", en: "PROFILE & CRITERIA" },
   { ko: "비교기업 검토", en: "PEER SELECTION" },
   { ko: "가치평가 결과", en: "VALUATION RESULT" },
 ];
@@ -18,7 +18,6 @@ export function Header() {
       <nav className="header-nav"><a className="on" href="/">IPO 상대가치평가</a><a href="/">평가 방법론</a></nav>
       <div className="header-right">
         <span className="market">KR &nbsp;한국 시장</span>
-        <span className={`chip-demo ${API_MODE === "live" ? "live" : ""}`}>{API_MODE === "live" ? "LIVE WORKSPACE" : "DEMO WORKSPACE"}</span>
       </div>
     </header>
   );
@@ -38,7 +37,7 @@ export function Sidebar({ step, maxStep, onGo }: SidebarProps) {
               aria-current={step === i ? "step" : undefined}
               onClick={() => onGo(i)}
             >
-              <span className="side-no">{String(i + 1).padStart(2, "0")}</span>
+              <span className="side-no">{i < step ? "✓" : String(i + 1).padStart(2, "0")}</span>
               <span><span className="side-ko">{s.ko}</span><span className="side-en">{s.en}</span></span>
             </button>
           </li>
@@ -59,7 +58,7 @@ export function ModeBanner() {
   if (API_MODE === "live") return null;
   return (
     <div className="demo-banner">
-      <b>DEMO</b>실제 IPO 데이터가 없는 체험용 화면입니다. 기업·수치·유사도·설명은 모두 가상 예시입니다.
+      실제 IPO 데이터가 없는 체험용 화면입니다. 기업·수치·유사도·설명은 모두 가상 예시입니다.
     </div>
   );
 }

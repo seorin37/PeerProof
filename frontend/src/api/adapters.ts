@@ -6,8 +6,8 @@
  * 원칙: 필수 필드가 없으면 ApiError('shape')로 실패시키고, 선택 필드는 없으면 생략합니다.
  */
 import type {
-  BusinessProfile, CompanyNetwork, CompanySummary, EvidenceRef, ExplainStatement, Explanation,
-  PerPeer, PerStats, SimilarCompany, SimilarResult, Valuation,
+  BusinessProfile, CompanyNetwork, CompanySummary, AreaExplanation, AreaKey, EvidenceRef, Explanation,
+  AreaScores, PerPeer, PerStats, SimilarCompany, SimilarResult, Valuation,
 } from "../types/domain";
 import { ApiError } from "./errors";
 
@@ -96,6 +96,13 @@ export function adaptProfile(json: unknown): BusinessProfile {
   };
 }
 
+function adaptAreas(v: unknown): AreaScores | null {
+  if (v === null || typeof v !== "object") return null;
+  const r = v as Rec;
+  const a = { bm: score(r.business_model ?? r.bm), growth: score(r.growth), risk: score(r.risk), fin: score(r.finance ?? r.fin) };
+  return a.bm === null || a.growth === null || a.risk === null || a.fin === null ? null : (a as AreaScores);
+}
+
 export function adaptSimilar(json: unknown): SimilarResult {
   const r = rec(json, "similar");
   const f = r.fusion == null ? undefined : rec(r.fusion, "similar.fusion");
@@ -108,6 +115,7 @@ export function adaptSimilar(json: unknown): SimilarResult {
         fused: (score(ir.fused_score) ?? fail(`similar.items[${i}]`, "fused_score 가 없습니다")),
         embedding: score(ir.embedding_score),
         network: score(ir.network_score),
+        areas: adaptAreas(ir.area_scores),
       },
     };
   });
@@ -137,22 +145,31 @@ export function adaptNetwork(json: unknown): CompanyNetwork {
   return { companyId: str(r.company_id, "network.company_id"), nodes, edges };
 }
 
-function adaptStatements(v: unknown, where: string): ExplainStatement[] {
-  return list(v, where).map((s, i) => {
-    const sr = rec(s, `${where}[${i}]`);
-    return { text: str(sr.text, `${where}[${i}].text`), evidenceIds: ids(sr.evidence_ids) };
-  });
-}
+const AREA_KEYS: Record<string, AreaKey> = { business_model: "bm", bm: "bm", growth: "growth", risk: "risk", finance: "fin", fin: "fin" };
 
 export function adaptExplanation(json: unknown): Explanation {
   const r = rec(json, "explanation");
+  const areas: AreaExplanation[] = [];
+  list(r.areas, "explanation.areas").forEach((v, i) => {
+    const ar = rec(v, `explanation.areas[${i}]`);
+    const key = typeof ar.area === "string" ? AREA_KEYS[ar.area] : undefined;
+    if (!key) return; // 알 수 없는 영역 이름은 건너뜁니다
+    const c = ar.compare == null ? null : rec(ar.compare, `explanation.areas[${i}].compare`);
+    areas.push({
+      area: key,
+      score: score(ar.score),
+      text: optStr(ar.text) ?? "",
+      compare: c ? { targetLabel: str(c.target_label, "compare.target_label"), targetValue: str(c.target_value, "compare.target_value"), peerLabel: str(c.peer_label, "compare.peer_label"), peerValue: str(c.peer_value, "compare.peer_value") } : null,
+      evidenceIds: ids(ar.evidence_ids),
+    });
+  });
   return {
     targetId: str(r.target_id, "explanation.target_id"),
     peerId: str(r.peer_id, "explanation.peer_id"),
-    summary: optStr(r.summary) ?? "",
-    similarities: adaptStatements(r.similarities, "explanation.similarities"),
-    differences: adaptStatements(r.differences, "explanation.differences"),
+    areas,
     evidence: list(r.evidence, "explanation.evidence").map((e, i) => adaptEvidence(e, `explanation.evidence[${i}]`)),
+    coverage: optNum(r.coverage),
+    period: optStr(r.period),
     generatedAt: optStr(r.generated_at),
     model: optStr(r.model),
   };
@@ -166,6 +183,7 @@ export function adaptValuation(json: unknown): Valuation {
       companyId: str(pr.company_id, "peer.company_id"),
       name: str(pr.name, "peer.name"),
       per: optNum(pr.per),
+      pbr: optNum(pr.pbr),
       included: pr.included === true,
       note: optStr(pr.note),
     };
@@ -175,18 +193,14 @@ export function adaptValuation(json: unknown): Valuation {
     const s = rec(r.stats, "valuation.stats");
     stats = { min: optNum(s.min), q1: optNum(s.q1), median: optNum(s.median), mean: optNum(s.mean), q3: optNum(s.q3), max: optNum(s.max) };
   }
-  let priceBand: Valuation["priceBand"];
-  if (r.price_band != null) {
-    const b = rec(r.price_band, "valuation.price_band");
-    priceBand = { low: num(b.low, "price_band.low"), high: num(b.high, "price_band.high") };
-  }
   return {
     targetId: str(r.target_id, "valuation.target_id"),
     currency: optStr(r.currency),
     basis: optStr(r.basis),
     peers,
     stats,
-    priceBand,
+    netIncome: optNum(r.net_income),
+    shares: optNum(r.shares_outstanding),
     notes: list(r.notes, "valuation.notes").filter((n): n is string => typeof n === "string"),
   };
 }

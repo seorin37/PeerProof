@@ -337,8 +337,8 @@ h3 { font-size: 16px; font-weight: 600; }
 .netgraph { width: 100%; height: auto; background: var(--th); border: 1px solid var(--line); }
 .netnode { cursor: pointer; }
 .netside { min-width: 0; }
-.tabs.mini { padding: 0; margin: 0 0 8px; }
-.tabs.mini .tab { width: auto; flex: 1; height: 36px; font-size: 12px; }
+.nettabs { padding: 0; margin: 0 0 8px; }
+.nettabs .tab { width: auto; flex: 1; height: 36px; font-size: 12px; }
 .nodeinfo { background: var(--soft); padding: 8px 10px; font-size: 12px; margin-bottom: 8px; }
 .netlist { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow: auto; }
 .netlist li { display: flex; align-items: center; gap: 8px; padding: 7px 4px; border-bottom: 1px solid var(--line); font-size: 12.5px; cursor: pointer; }
@@ -370,10 +370,55 @@ h3 { font-size: 16px; font-weight: 600; }
 .medline em { font-style: normal; font-size: 11px; color: var(--c-fin); position: absolute; right: 0; top: -16px; }
 .kpis { grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 1024px) { .netgrid { grid-template-columns: 1fr; } .sim-table .tr { grid-template-columns: 36px 1.6fr 1fr; } .sim-table .tr > .sbar { display: none; } }
-.netside .tabs.mini { display: flex; }
-.netside .tabs.mini .tab { flex: 1 1 0; width: auto; min-width: 0; padding: 0 8px; font-family: var(--sans); }
+.netside .nettabs { display: flex; }
+.netside .nettabs .tab { flex: 1 1 0; width: auto; min-width: 0; padding: 0 8px; font-family: var(--sans); }
 .crumb { margin-top: 18px; }
 .sim-row .sbar { justify-self: center; }
 .choice.wide { gap: 14px; }
 .header-right .market { color: var(--muted); }
 .side-foot .side-label { display: block; }
+.subh { margin: 0; font-size: 13px; color: var(--muted); font-weight: 500; }
+.peers .peer-name { background: none; border: 0; padding: 0; cursor: pointer; }
+.peers .score small { font-size: 10.5px; color: var(--muted); font-family: var(--sans); }
+.peers .score .total { font-size: 26px; }
+.weights.card { padding: 18px 22px; margin-bottom: 18px; }
+.weights .wctl { gap: 56px; flex-wrap: wrap; }
+.imp .seg button { font-family: var(--mono); }
+.imp .seg button b { font-family: var(--sans); }
+.excl { text-align: left; cursor: pointer; }
+.hero-side small { margin-top: 8px; }
+.hero-side .mono { font-size: 24px; }
+.two > .card .shares { margin-bottom: 4px; }
+.card .card-head h2 + .sub { margin-top: 6px; font-size: 12px; }
+@media (max-width: 1024px) { .weights .wctl { gap: 18px; } }
+.loading { position: fixed; inset: 0; z-index: 100; min-height: 0; }
+
+/* 선정 근거(시안 03/06) */
+.evidence { background: var(--th); border-left: 3px solid var(--blue); padding: 22px 24px; }
+.sim-table .evidence, .peers .evidence { min-width: 0; }
+.basis-panel { display: grid; gap: 16px; }
+.basis-panel h3 { font-size: 16px; }
+.ev-card { background: #fff; align-content: start; }
+.ev-card p { font-size: 13.5px; line-height: 1.8; }
+.ev-compare { background: var(--th); }
+.ulink { text-decoration: underline; text-underline-offset: 4px; justify-self: start; }
+.evrefs { margin: 0; padding: 0 0 0 18px; display: grid; gap: 8px; font-size: 12px; color: #3b4a60; }
+.evrefs blockquote { margin: 4px 0 0; color: #4a5568; }
+.segmini span.on { display: block; padding: 6px 14px; font-size: 12px; background: var(--ink); color: #fff; }
+.nettabs { width: auto; height: auto; border: 0; border-bottom: 1px solid var(--line); background: none; font-family: var(--sans); }
+
+/* PER · PBR 값 크게 */
+.perval { font-size: 17px; font-weight: 500; }
+.calc { font-size: 14px; }
+.input.ro { cursor: not-allowed; user-select: none; }
+.input.ro .roval { flex: 1; font-size: 13px; color: #3b4a60; }
+/* 근거 팝업 */
+.dlg-back { position: fixed; inset: 0; z-index: 200; background: rgba(36, 44, 58, .82); display: grid; place-items: center; padding: 24px; }
+.dlg { background: #fff; border-top: 3px solid var(--blue); width: min(760px, 100%); max-height: 90vh; overflow: auto; padding: 32px 36px 28px; }
+.dlg-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
+.dlg-head h2 { font-size: 24px; font-weight: 700; }
+.dlg-row { padding: 16px 0 14px; border-bottom: 1px solid var(--line); display: grid; gap: 6px; }
+.dlg-row small { font-size: 13px; }
+.dlg-row > div { font-size: 15px; line-height: 1.6; }
+.dlg-ev { margin-top: 6px; }
+.dlg-evno { display: block; margin-top: 14px; color: var(--blue); font-size: 12px; font-family: var(--mono); font-weight: 400; }

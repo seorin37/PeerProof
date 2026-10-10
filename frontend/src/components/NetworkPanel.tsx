@@ -13,15 +13,13 @@ const TABS: { key: Tab; label: string }[] = [
 interface Props {
   target: CompanyNetwork | null;
   peer: CompanyNetwork;
-  targetName: string;
   peerName: string;
 }
 
-export default function NetworkPanel({ target, peer, targetName, peerName }: Props) {
-  const [side, setSide] = useState<"peer" | "target">("peer");
+export default function NetworkPanel({ target, peer, peerName }: Props) {
   const [tab, setTab] = useState<Tab>("keyword");
   const [sel, setSel] = useState<string | null>(null);
-  const net = side === "target" && target ? target : peer;
+  const net = peer;
   const shared = useMemo(() => sharedLabels(target, peer), [target, peer]);
   const deg = useMemo(() => weightedDegree(net), [net]);
   const byCentrality = useMemo(() => [...net.nodes].sort((a, b) => b.centrality - a.centrality), [net]);
@@ -32,10 +30,7 @@ export default function NetworkPanel({ target, peer, targetName, peerName }: Pro
   return (
     <div className="netpanel">
       <div className="netbar">
-        <div className="segmini" role="group" aria-label="네트워크 대상">
-          <button className={side === "peer" ? "on" : ""} onClick={() => { setSide("peer"); setSel(null); }}>{peerName}</button>
-          <button className={side === "target" ? "on" : ""} disabled={!target} onClick={() => { setSide("target"); setSel(null); }}>{targetName}</button>
-        </div>
+        <div className="segmini" aria-label="네트워크 대상"><span className="on">{peerName}</span></div>
         <span className="small muted">
           {target ? <><i className="legend-dot shared" /> 공통 키워드 {shared.size}개 · 노드 크기 = 중심성 · 선 굵기 = 가중치</> : "대상기업 네트워크를 불러오지 못해 공통 키워드 표시를 생략합니다."}
         </span>
@@ -43,7 +38,7 @@ export default function NetworkPanel({ target, peer, targetName, peerName }: Pro
       <div className="netgrid">
         <NetworkGraph network={net} shared={shared} selectedId={sel} onSelect={setSel} />
         <div className="netside">
-          <div className="tabs mini" role="tablist">
+          <div className="tabs nettabs" role="tablist">
             {TABS.map((t) => (
               <button key={t.key} role="tab" aria-selected={tab === t.key} className={`tab ${tab === t.key ? "on" : ""}`} onClick={() => setTab(t.key)}>{t.label}</button>
             ))}

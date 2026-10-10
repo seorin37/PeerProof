@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { clearResourceCache } from "./hooks/useResource";
 import { Footer, Header, Sidebar } from "./components/Layout";
+import { DEFAULT_LEVELS, type Levels } from "./lib/scoring";
 import Step1 from "./steps/Step1";
 import Step2 from "./steps/Step2";
 import Step3 from "./steps/Step3";
@@ -11,10 +12,13 @@ export default function App() {
   const [step, setStep] = useState(0);
   const [maxStep, setMaxStep] = useState(0);
   const [company, setCompany] = useState<CompanySummary | null>(null);
+  const [levels, setLevels] = useState<Levels>(DEFAULT_LEVELS);
+  // null = 아직 직접 고르지 않음 → 기본 선택(백엔드가 included 로 표시한 기업) 사용
+  const [selected, setSelected] = useState<string[] | null>(null);
 
   const go = (s: number) => { setStep(s); setMaxStep((m) => Math.max(m, s)); window.scrollTo(0, 0); };
-  const pick = (c: CompanySummary) => { setCompany(c); setMaxStep(0); };
-  const reset = () => { clearResourceCache(); setCompany(null); setStep(0); setMaxStep(0); window.scrollTo(0, 0); };
+  const pick = (c: CompanySummary) => { setCompany(c); setMaxStep(0); setSelected(null); setLevels(DEFAULT_LEVELS); };
+  const reset = () => { clearResourceCache(); setCompany(null); setStep(0); setMaxStep(0); setSelected(null); setLevels(DEFAULT_LEVELS); window.scrollTo(0, 0); };
 
   return (
     <>
@@ -23,9 +27,9 @@ export default function App() {
         <Sidebar step={step} maxStep={company ? maxStep : 0} onGo={setStep} />
         <main className="main">
           {step === 0 && <Step1 selected={company} onSelect={pick} onNext={() => go(1)} />}
-          {step === 1 && company && <Step2 company={company} onBack={() => go(0)} onNext={() => go(2)} />}
-          {step === 2 && company && <Step3 company={company} onBack={() => go(1)} onNext={() => go(3)} />}
-          {step === 3 && company && <Step4 company={company} onBack={() => go(2)} onReset={reset} />}
+          {step === 1 && company && <Step2 company={company} levels={levels} onLevels={setLevels} onBack={() => go(0)} onNext={() => go(2)} />}
+          {step === 2 && company && <Step3 company={company} levels={levels} selected={selected} onSelect={setSelected} onEditCriteria={() => go(1)} onBack={() => go(1)} onNext={() => go(3)} />}
+          {step === 3 && company && <Step4 company={company} levels={levels} selected={selected} onBack={() => go(2)} onReset={reset} />}
           <Footer />
         </main>
       </div>

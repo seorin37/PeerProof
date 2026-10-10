@@ -72,7 +72,7 @@ const EMPTY: Record<RouteKey, (p: RouteParams) => unknown> = {
   profile: (p) => ({ company_id: p.companyId, company_name: nameOf(p.companyId ?? ""), sections: [], evidence: [] }),
   similar: (p) => ({ target_id: p.companyId, items: [] }),
   network: (p) => ({ company_id: p.companyId, nodes: [], edges: [] }),
-  explanation: (p) => ({ target_id: p.companyId, peer_id: p.peerId, summary: "", similarities: [], differences: [], evidence: [] }),
+  explanation: (p) => ({ target_id: p.companyId, peer_id: p.peerId, areas: [], evidence: [] }),
   valuation: (p) => ({ target_id: p.companyId, peers: [], notes: [] }),
 };
 

@@ -33,7 +33,8 @@ describe("mock API → domain", () => {
     const n = await api.getNetwork("P01");
     expect(n.nodes.length).toBeGreaterThan(3);
     const e = await api.getExplanation("TGT", "P01");
-    expect(e.summary).not.toMatch(/\{target\}|\{peer\}/);
+    expect(e.areas).toHaveLength(4);
+    expect(JSON.stringify(e.areas)).not.toMatch(/\{target\}|\{peer\}/);
   });
 });
 

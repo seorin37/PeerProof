@@ -51,7 +51,12 @@ export interface BusinessProfile {
   evidence: EvidenceRef[];
 }
 
+export type AreaKey = "bm" | "growth" | "risk" | "fin";
+export type AreaScores = Record<AreaKey, number>;
+
 export interface SimilarityScores {
+  /** 영역별(Business Model/Growth/Risk/Finance) 임베딩 유사도 (0–100). 없으면 null → 중요도 가중 재계산 불가 */
+  areas?: AreaScores | null;
   /** Late Fusion 결과 (0–100) */
   fused: number;
   /** BGE-M3 임베딩 유사도 (0–100). 없으면 null */
@@ -92,18 +97,25 @@ export interface CompanyNetwork {
   edges: NetworkEdge[];
 }
 
-export interface ExplainStatement {
+/** 영역별 선정 근거 한 장: 설명 문장 + 대상/비교기업 수치 비교 + 근거 */
+export interface AreaExplanation {
+  area: AreaKey;
+  /** 0–100. 없으면 유사도 결과의 영역 점수를 사용 */
+  score: number | null;
   text: string;
+  compare: { targetLabel: string; targetValue: string; peerLabel: string; peerValue: string } | null;
   evidenceIds: string[];
 }
 
 export interface Explanation {
   targetId: string;
   peerId: string;
-  summary: string;
-  similarities: ExplainStatement[];
-  differences: ExplainStatement[];
+  areas: AreaExplanation[];
   evidence: EvidenceRef[];
+  /** 자료 충족률(0–100). 백엔드가 주면 표시 */
+  coverage?: number | null;
+  /** 기준 기간 · 회계 범위 · 단위 (예: 2025년 연결 · KRW / 억 원 및 %) */
+  period?: string;
   generatedAt?: string;
   model?: string;
 }
@@ -112,6 +124,7 @@ export interface PerPeer {
   companyId: string;
   name: string;
   per: number | null;
+  pbr?: number | null;
   included: boolean;
   note?: string;
 }
@@ -132,6 +145,9 @@ export interface Valuation {
   peers: PerPeer[];
   /** 백엔드가 주지 않으면 null → 화면에서 포함 기업 PER로 대신 계산해 표시 */
   stats: PerStats | null;
-  priceBand?: { low: number; high: number };
+  /** 대상기업 순이익 (억원). 없으면 화면에서 직접 입력 */
+  netIncome?: number | null;
+  /** 기존 발행주식수 (만주). 없으면 화면에서 직접 입력 */
+  shares?: number | null;
   notes: string[];
 }

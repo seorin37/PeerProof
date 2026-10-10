@@ -1,11 +1,85 @@
 {
   "target_id": "TGT",
-  "fusion": { "embedding_weight": 0.6, "network_weight": 0.4, "method": "late_fusion" },
+  "fusion": {
+    "embedding_weight": 0.6,
+    "network_weight": 0.4,
+    "method": "late_fusion"
+  },
   "items": [
-    { "rank": 1, "company_id": "P01", "name": "가상 알파", "industry": "B2B 업무용 SaaS", "fused_score": 0.894, "embedding_score": 0.93, "network_score": 0.84 },
-    { "rank": 2, "company_id": "P02", "name": "가상 베타", "industry": "기업 협업 SaaS", "fused_score": 0.86, "embedding_score": 0.88, "network_score": 0.83 },
-    { "rank": 3, "company_id": "P03", "name": "가상 감마", "industry": "기업 데이터 SaaS", "fused_score": 0.828, "embedding_score": 0.86, "network_score": 0.78 },
-    { "rank": 4, "company_id": "P07", "name": "가상 에타", "industry": "B2B 업무용 SaaS", "fused_score": 0.778, "embedding_score": 0.83, "network_score": 0.7 },
-    { "rank": 5, "company_id": "P04", "name": "가상 델타", "industry": "보안 구독 서비스", "fused_score": 0.738, "embedding_score": 0.79, "network_score": 0.66 }
+    {
+      "rank": 1,
+      "company_id": "P01",
+      "name": "가상 알파",
+      "industry": "B2B 업무용 SaaS",
+      "fused_score": 0.894,
+      "embedding_score": 0.93,
+      "network_score": 0.84,
+      "area_scores": {
+        "business_model": 0.96,
+        "growth": 0.91,
+        "risk": 0.89,
+        "finance": 0.94
+      }
+    },
+    {
+      "rank": 2,
+      "company_id": "P02",
+      "name": "가상 베타",
+      "industry": "기업 협업 SaaS",
+      "fused_score": 0.86,
+      "embedding_score": 0.88,
+      "network_score": 0.83,
+      "area_scores": {
+        "business_model": 0.85,
+        "growth": 0.9,
+        "risk": 0.92,
+        "finance": 0.87
+      }
+    },
+    {
+      "rank": 3,
+      "company_id": "P03",
+      "name": "가상 감마",
+      "industry": "기업 데이터 SaaS",
+      "fused_score": 0.828,
+      "embedding_score": 0.86,
+      "network_score": 0.78,
+      "area_scores": {
+        "business_model": 0.91,
+        "growth": 0.82,
+        "risk": 0.84,
+        "finance": 0.87
+      }
+    },
+    {
+      "rank": 4,
+      "company_id": "P07",
+      "name": "가상 에타",
+      "industry": "B2B 업무용 SaaS",
+      "fused_score": 0.778,
+      "embedding_score": 0.83,
+      "network_score": 0.7,
+      "area_scores": {
+        "business_model": 0.78,
+        "growth": 0.87,
+        "risk": 0.85,
+        "finance": 0.82
+      }
+    },
+    {
+      "rank": 5,
+      "company_id": "P04",
+      "name": "가상 델타",
+      "industry": "보안 구독 서비스",
+      "fused_score": 0.738,
+      "embedding_score": 0.79,
+      "network_score": 0.66,
+      "area_scores": {
+        "business_model": 0.82,
+        "growth": 0.77,
+        "risk": 0.75,
+        "finance": 0.8
+      }
+    }
   ]
 }

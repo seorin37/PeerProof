@@ -3,16 +3,56 @@
   "currency": "KRW",
   "basis": "FY2025 · 연결 · 가상 예시",
   "peers": [
-    { "company_id": "P01", "name": "가상 알파", "per": 20.0, "included": true },
-    { "company_id": "P02", "name": "가상 베타", "per": 21.0, "included": true },
-    { "company_id": "P03", "name": "가상 감마", "per": 26.0, "included": true },
-    { "company_id": "P07", "name": "가상 에타", "per": null, "included": false, "note": "적자로 PER 산출 불가" },
-    { "company_id": "P04", "name": "가상 델타", "per": 20.0, "included": false, "note": "선택 제외" }
+    {
+      "company_id": "P01",
+      "name": "가상 알파",
+      "per": 20.0,
+      "included": true,
+      "pbr": 2.8
+    },
+    {
+      "company_id": "P02",
+      "name": "가상 베타",
+      "per": 21.0,
+      "included": true,
+      "pbr": 3.2
+    },
+    {
+      "company_id": "P03",
+      "name": "가상 감마",
+      "per": 26.0,
+      "included": true,
+      "pbr": 1.9
+    },
+    {
+      "company_id": "P07",
+      "name": "가상 에타",
+      "per": null,
+      "included": false,
+      "note": "적자로 PER 산출 불가",
+      "pbr": 2.1
+    },
+    {
+      "company_id": "P04",
+      "name": "가상 델타",
+      "per": 20.0,
+      "included": false,
+      "note": "선택 제외",
+      "pbr": 4.1
+    }
   ],
-  "stats": { "min": 20.0, "q1": 20.5, "median": 21.0, "mean": 22.33, "q3": 23.5, "max": 26.0 },
-  "price_band": { "low": 14300, "high": 19900 },
+  "stats": {
+    "min": 20.0,
+    "q1": 20.5,
+    "median": 21.0,
+    "mean": 22.33,
+    "q3": 23.5,
+    "max": 26.0
+  },
   "notes": [
     "가상 예시 값이며 확정 공모가가 아닙니다.",
-    "PER 분포(Q1–Q3)에 할인율을 적용한 예시 범위로, 통계적 신뢰구간이 아닙니다."
-  ]
+    "순이익·발행주식수는 대상기업 프로필의 가상 값이며, 전환증권·공모자금 유입은 반영하지 않습니다."
+  ],
+  "net_income": 120,
+  "shares_outstanding": 1000
 }
